@@ -1,0 +1,10 @@
+Django>=1.8,<2.0  # last tried with 1.11.5
+djangorestframework==3.6.4  # was 3.6.4
+django-filter  # was 1.0.4
+Markdown
+requests
+plotly  # was 2.0.15
+gunicorn
+gevent
+pandas
+psycopg2

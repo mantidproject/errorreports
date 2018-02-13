@@ -1,0 +1,32 @@
+server {
+    listen 80;
+    server_name localhost;
+    charset utf-8;
+
+    location /adminer {
+        proxy_pass http://adminer:8080;
+        proxy_set_header Host $host;
+        proxy_set_header X-Real-IP $remote_addr;
+        proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+
+        # Some operations can take a while so make sure the gateway doesn't timeout with a 502
+        proxy_connect_timeout      60s;
+        proxy_send_timeout         60s;
+        proxy_read_timeout         60s;
+    }
+
+    location /static {
+        alias /usr/src/app/static;
+    }
+
+    location / {
+        include proxy_params;
+        proxy_pass http://web:8000;
+
+        # Some operations can take a while so make sure the gateway doesn't timeout with a 502
+        proxy_connect_timeout      60s;
+        proxy_send_timeout         60s;
+        proxy_read_timeout         60s;
+    }
+
+}

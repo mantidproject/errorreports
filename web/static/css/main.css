@@ -1,0 +1,30 @@
+/* ==========================================================================
+   Tables
+   ========================================================================== */
+
+table {
+    border-collapse: collapse;
+    border-spacing: 0;
+    display: table;
+}
+
+tr       { display: table-row }
+thead    {
+    background-color:  #999;
+    display: table-header-group;
+}
+tbody    { display: table-row-group }
+tfoot    { display: table-footer-group }
+col      { display: table-column }
+colgroup { display: table-column-group }
+
+td, th   {
+ display: table-cell;
+ padding: 5px;
+}
+
+caption  { display: table-caption }
+
+tbody tr:nth-child(even) {
+   background-color: #ddd;
+}

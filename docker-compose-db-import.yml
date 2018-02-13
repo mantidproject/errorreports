@@ -1,0 +1,10 @@
+# Override file to add an import of existing data. Requires that DB_DUMP is defined
+# in the .env file or the running environment.
+version: '3.2'
+services:
+  postgres:
+    volumes:
+      - type: bind
+        source: ${DB_DUMP}
+        target: /docker-entrypoint-initdb.d/initial-db-content.sql
+        read_only: true
