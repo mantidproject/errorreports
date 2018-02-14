@@ -17,12 +17,12 @@ if 'REDISCLOUD_URL' in os.environ and 'REDISCLOUD_PORT' in os.environ and 'REDIS
     packages.append('django-redis-cache')
     packages.append('hiredis')
 
-setup(name='MantidReports',
+setup(name='MantidErrorReports',
       version='1.2',
-      description='RESTful services relatd to mantid',
-      author='P.F.Peterson',
-      author_email='petersonpr@ornl.gov',
-      url='http://www.mantidproject.org',
+      description='RESTful services related to mantid error reporting',
+      author='',
+      author_email='',
+      url='',
       install_requires=packages,
       packages=find_packages(),
       include_package_data=True,
