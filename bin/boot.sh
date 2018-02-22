@@ -7,7 +7,7 @@ function mk_django_secret() {
 
 SCRIPTPATH=$(cd "$(dirname "$0")"; pwd -P)
 SOURCE_DIR=$(cd "$SCRIPTPATH" && cd .. && pwd -P)
-PROJECT_NAME=reports
+PROJECT_NAME=errorreports
 DB_VOLUME_NAME=pgdata
 
 # Required by django settings
