@@ -6,12 +6,11 @@ class ErrorSerializer(serializers.HyperlinkedModelSerializer):
     # use everything, but the following are optional
     osReadable = serializers.CharField(required=False, allow_blank=True)
     application = serializers.CharField(required=False, allow_blank=True)
-    # uid = serializers.HyperlinkedIdentityField(view_name='UsageViewSet',
-    #                                format='html', lookup_field='Usage.uid')
 
     class Meta:
         model = ErrorReport
         # fields = '__all__'
         fields = ['osReadable', 'application', 'url', 'uid',
                   'host', 'dateTime', 'osName', 'osArch', 'osVersion',
-                  'ParaView', 'mantidVersion', 'mantidSha1', 'facility', 'exitCode', 'upTime']
+                  'ParaView', 'mantidVersion', 'mantidSha1', 'facility',
+                  'exitCode', 'upTime']

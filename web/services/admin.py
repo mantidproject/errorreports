@@ -22,4 +22,3 @@ class ErrorAdmin(admin.ModelAdmin):
 
 
 admin.site.register(ErrorReport, ErrorAdmin)
-

@@ -1,11 +1,5 @@
 from django.db import models
-import os
-import settings
-import json
-import requests
-import hashlib
 
-# Create your models here.
 
 class ErrorReport(models.Model):
     # md5 ex: "c5a9b601408709f47417bcba3571262b"
@@ -28,7 +22,6 @@ class ErrorReport(models.Model):
     application = models.CharField(max_length=80, default="", blank=True)
 
     facility = models.CharField(max_length=32, default="", blank=True)
-    exitCode = models.CharField(max_length=32, default="", null=True, blank=True)
-    upTime = models.CharField(max_length=32, default="") 
-
-
+    exitCode = models.CharField(max_length=32, default="",
+                                null=True, blank=True)
+    upTime = models.CharField(max_length=32, default="")
