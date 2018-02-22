@@ -14,4 +14,4 @@ else
 fi
 
 # Start
-gunicorn wsgi:application -w 4 -k "gevent" --max-requests 1000 --max-requests-jitter 100 --timeout 600 --graceful-timeout 600 ${DEBUG_ARGS} -b :8000
+gunicorn wsgi:application -w 1 -k "gevent" --max-requests 1000 --max-requests-jitter 100 --timeout 600 --graceful-timeout 600 ${DEBUG_ARGS} -b :8000
