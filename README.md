@@ -1,3 +1,5 @@
+[![Build Status](https://travis-ci.org/mantidproject/errorreports.svg?branch=master)](https://travis-ci.org/mantidproject/errorreports)
+
 Working with docker
 -------------------
 
