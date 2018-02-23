@@ -2,7 +2,7 @@
 # Starts the stack
 
 function mk_django_secret() {
-  python -c "import random,string;print '%s'%''.join([random.SystemRandom().choice(\"{}{}{}\".format(string.ascii_letters, string.digits, string.punctuation)) for i in range(63)])";
+  python -c "import random,string;print('%s'%''.join([random.SystemRandom().choice(\"{}{}{}\".format(string.ascii_letters, string.digits, string.punctuation)) for i in range(63)]))";
 }
 
 SCRIPTPATH=$(cd "$(dirname "$0")"; pwd -P)
