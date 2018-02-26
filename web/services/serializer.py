@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ErrorReport
+from .models import ErrorReport, UserDetails
 
 
 class ErrorSerializer(serializers.HyperlinkedModelSerializer):
@@ -15,3 +15,8 @@ class ErrorSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['osReadable', 'application', 'url', 'uid',
                   'host', 'dateTime', 'osName', 'osArch', 'osVersion',
                   'ParaView', 'mantidVersion', 'mantidSha1', 'facility', 'exitCode', 'upTime']
+
+class UserSerializer(serializers.HyperlinkedModelSerializer):
+    class Meta:
+        model = UserDetails
+        fields = ['name', 'email', 'dateTime']

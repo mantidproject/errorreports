@@ -1,7 +1,7 @@
 from django.contrib import admin
 
 # Register your models here.
-from .models import ErrorReport
+from .models import ErrorReport, UserDetails
 
 
 class ErrorAdmin(admin.ModelAdmin):
@@ -20,6 +20,12 @@ class ErrorAdmin(admin.ModelAdmin):
                     'exitCode',
                     'upTime')
 
+class UserAdmin(admin.ModelAdmin):
+    list_display = ('name',
+                    'email',
+                    'dateTime')
+
 
 admin.site.register(ErrorReport, ErrorAdmin)
+admin.site.register(UserDetails, UserAdmin)
 
