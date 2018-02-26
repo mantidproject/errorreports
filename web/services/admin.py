@@ -18,12 +18,18 @@ class ErrorAdmin(admin.ModelAdmin):
                     'application',
                     'facility',
                     'exitCode',
-                    'upTime')
+                    'upTime',
+                    'get_user_email')
+
+    def get_user_email(self, obj):
+        return obj.user.email
+    get_user_email.admin_order_field = 'email'
+    get_user_email.short_description = 'User provided email'
+
 
 class UserAdmin(admin.ModelAdmin):
     list_display = ('name',
-                    'email',
-                    'dateTime')
+                    'email')
 
 
 admin.site.register(ErrorReport, ErrorAdmin)

@@ -1,4 +1,4 @@
-from services.models import ErrorReport
+from services.models import ErrorReport, UserDetails
 from rest_framework import response, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny
@@ -81,6 +81,12 @@ class ErrorViewSet(viewsets.ModelViewSet):
         upTime = report["upTime"]
         exitCode = report["exitCode"]
 
+        name = report["name"]
+        email = report["email"]
+        user, created = UserDetails.objects.get_or_create(name=name,
+                                                          email=email)
+        user.save()
+
         obj, created = \
             ErrorReport.objects.get_or_create(osReadable=osReadable,
                                               application=application,
@@ -94,7 +100,8 @@ class ErrorViewSet(viewsets.ModelViewSet):
                                               mantidSha1=mantidSha1,
                                               facility=facility,
                                               upTime=upTime,
-                                              exitCode=exitCode)
+                                              exitCode=exitCode,
+                                              user=user)
         obj.save()
 
 

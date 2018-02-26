@@ -25,8 +25,8 @@ class ErrorReport(models.Model):
     exitCode = models.CharField(max_length=32, default="",
                                 null=True, blank=True)
     upTime = models.CharField(max_length=32, default="") 
+    user = models.ForeignKey('UserDetails', on_delete=models.SET_NULL, blank=True, null=True)
 
 class UserDetails(models.Model):
     name = models.CharField(max_length=32, help_text="user provided name")
     email = models.CharField(max_length=32, help_text="user provided email")
-    dateTime = models.DateTimeField(db_index=True)

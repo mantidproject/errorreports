@@ -14,10 +14,3 @@ class ErrorSerializer(serializers.HyperlinkedModelSerializer):
                   'host', 'dateTime', 'osName', 'osArch', 'osVersion',
                   'ParaView', 'mantidVersion', 'mantidSha1', 'facility',
                   'exitCode', 'upTime']
-
-
-class UserSerializer(serializers.HyperlinkedModelSerializer):
-    class Meta:
-        model = UserDetails
-        fields = ['name', 'email', 'dateTime']
-        
