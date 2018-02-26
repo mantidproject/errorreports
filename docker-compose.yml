@@ -40,7 +40,7 @@ services:
       - DB_SERVICE
       - DB_PORT
       - SECRET_KEY
-      # Define this in .env for development mode. DO NOT USED IN PRODUCTION
+      # Define this in .env for development mode. DO NOT USE IN PRODUCTION
       - DEBUG
 
   nginx:

@@ -28,4 +28,3 @@ class UserAdmin(admin.ModelAdmin):
 
 admin.site.register(ErrorReport, ErrorAdmin)
 admin.site.register(UserDetails, UserAdmin)
-

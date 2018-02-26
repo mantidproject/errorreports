@@ -2,13 +2,13 @@
 # Starts the stack
 
 function mk_django_secret() {
-  python -c "import random,string;print '%s'%''.join([random.SystemRandom().choice(\"{}{}{}\".format(string.ascii_letters, string.digits, string.punctuation)) for i in range(63)])";
+  python -c "import random,string;print('%s'%''.join([random.SystemRandom().choice(\"{}{}{}\".format(string.ascii_letters, string.digits, string.punctuation)) for i in range(63)]))";
 }
 
 SCRIPTPATH=$(cd "$(dirname "$0")"; pwd -P)
 SOURCE_DIR=$(cd "$SCRIPTPATH" && cd .. && pwd -P)
 PROJECT_NAME=errorreports
-DB_VOLUME_NAME=pgdata
+DB_VOLUME_NAME=${PROJECT_NAME}_pgdata
 
 # Required by django settings
 DB_SERVICE=postgres
