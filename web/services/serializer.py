@@ -1,5 +1,5 @@
 from rest_framework import serializers
-from .models import ErrorReport, UserDetails
+from .models import ErrorReport
 
 
 class ErrorSerializer(serializers.HyperlinkedModelSerializer):

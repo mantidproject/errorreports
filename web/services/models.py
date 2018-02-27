@@ -24,8 +24,10 @@ class ErrorReport(models.Model):
     facility = models.CharField(max_length=32, default="", blank=True)
     exitCode = models.CharField(max_length=32, default="",
                                 null=True, blank=True)
-    upTime = models.CharField(max_length=32, default="") 
-    user = models.ForeignKey('UserDetails', on_delete=models.SET_NULL, blank=True, null=True)
+    upTime = models.CharField(max_length=32, default="")
+    user = models.ForeignKey('UserDetails', on_delete=models.SET_NULL,
+                             blank=True, null=True)
+
 
 class UserDetails(models.Model):
     name = models.CharField(max_length=32, help_text="user provided name")
