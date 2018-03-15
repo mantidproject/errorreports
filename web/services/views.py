@@ -85,7 +85,7 @@ class ErrorViewSet(viewsets.ModelViewSet):
             name = report["name"]
             email = report["email"]
             user, created = UserDetails.objects.get_or_create(name=name,
-                                                            email=email)
+                                                              email=email)
             user.save()
         else:
             user = None
