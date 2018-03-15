@@ -81,11 +81,14 @@ class ErrorViewSet(viewsets.ModelViewSet):
         upTime = report["upTime"]
         exitCode = report["exitCode"]
 
-        name = report["name"]
-        email = report["email"]
-        user, created = UserDetails.objects.get_or_create(name=name,
-                                                          email=email)
-        user.save()
+        if "name" in report and "email" in report:
+            name = report["name"]
+            email = report["email"]
+            user, created = UserDetails.objects.get_or_create(name=name,
+                                                            email=email)
+            user.save()
+        else:
+            user = None
 
         obj, created = \
             ErrorReport.objects.get_or_create(osReadable=osReadable,
