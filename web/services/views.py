@@ -84,8 +84,11 @@ class ErrorViewSet(viewsets.ModelViewSet):
         if "name" in report and "email" in report:
             name = report["name"]
             email = report["email"]
-            user, created = UserDetails.objects.get_or_create(name=name,
-                                                              email=email)
+            if UserDetails.objects.filter(email=email).exists():
+                user = UserDetails.objects.get(email=email)
+            else:
+                user, created = UserDetails.objects.get_or_create(name=name,
+                                                                  email=email)
             user.save()
         else:
             user = None
