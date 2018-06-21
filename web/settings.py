@@ -82,7 +82,6 @@ REST_FRAMEWORK = {
     'FORM_CONTENTTYPE_OVERRIDE': None
 }
 
-
 # Database
 # https://docs.djangoproject.com/en/1.8/ref/settings/#databases
 
@@ -145,3 +144,10 @@ if DEBUG:
             },
         },
     }
+
+EMAIL_USE_TLS = True
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_HOST_USER = 'mantidproject@gmail.com'
+EMAIL_HOST_PASSWORD = os.getenv('MAIL_PASS', '')
+EMAIL_PORT = os.getenv('MAIL_PORT', '')
+ERROR_EMAIL = os.getenv('ERROR_MAIL', '')

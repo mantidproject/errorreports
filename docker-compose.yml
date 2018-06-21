@@ -42,6 +42,9 @@ services:
       - SECRET_KEY
       # Define this in .env for development mode. DO NOT USE IN PRODUCTION
       - DEBUG
+      - MAIL_PASS
+      - MAIL_PORT
+      - ERROR_EMAIL
 
   nginx:
     restart: always

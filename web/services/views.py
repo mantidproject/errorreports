@@ -7,6 +7,8 @@ import django_filters
 from django.http import HttpResponse
 import json
 import hashlib
+from django.core.mail import send_mail
+from django.conf import settings
 
 
 class WithinDateFilter(django_filters.DateFilter):
@@ -49,7 +51,7 @@ class ErrorFilter(django_filters.FilterSet):
 
 class ErrorViewSet(viewsets.ModelViewSet):
     """All errors registered in the system. Valid filter parameters are:
-    'host', 'uid', 'datemin', 'datemax', and 'date'.
+    'datemin' and 'datemax'.
     """
     queryset = ErrorReport.objects.all()
     serializer_class = ErrorSerializer
@@ -60,10 +62,30 @@ class ErrorViewSet(viewsets.ModelViewSet):
         if request.method == 'POST':
             post_data = json.loads(request.body)
             self.saveErrorReport(post_data)
+            if "email" in post_data:
+                self.send_mail(post_data)
             return HttpResponse(status=201)
         else:
             return HttpResponse("Please supply feature error "
                                 "report data as POST.")
+
+    def send_mail(self, post_data):
+        to_address = [settings.ERROR_EMAIL]
+        print(to_address)
+        subject = 'User error report'
+
+        message = (
+                'An error report has been submitted by {}'
+                ' who provided the following email {}.'
+                '\n \n The recieved post data was {} '
+                ).format(post_data['name'], post_data['email'], post_data)
+
+        send_mail(subject,
+                  message,
+                  'mantidproject@gmail.com',
+                  to_address,
+                  fail_silently=False,
+                  )
 
     def saveErrorReport(self, report):
         osReadable = report["osReadable"]
@@ -114,4 +136,5 @@ class ErrorViewSet(viewsets.ModelViewSet):
 @api_view(('GET',))
 def api_root(request, format=None):
     return response.Response({
+        'error': "http://localhost:8082/api/error"
     })
