@@ -69,6 +69,29 @@ Then change to the correct database (defined in the `.env` file as `django`) and
 $ docker-compose exec web bash
 ```
 
+OSX Setup
+---------
+
+On OSX we can use a `VirtualBox` driver to execute the `Dockerfile`
+
+1. Edit the `.env` file to look something like:
+
+        DB_NAME=Test
+        DB_USER=YourName
+        DB_PASS=APassWord
+        HOST_PORT=8082
+
+2. Create a virtual machine called `development`
+
+        docker-machine create development --driver virtualbox
+        
+3. `docker-machine env development`
+4. `eval $(docker-machine env development)`
+5. `./bin/boot.sh` takes some time to run!
+6. Finally, you need to forward the ports from VirtualBox so that they are accessible on your host machine.
+
+        VBoxManage controlvm "development" natpf1 "tcp-port8082,tcp,,8082,,8082";
+
 Delete things
 =============
 remove containers
