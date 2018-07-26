@@ -31,5 +31,7 @@ class ErrorReport(models.Model):
 
 
 class UserDetails(models.Model):
-    name = models.CharField(max_length=input_box_max_length, help_text="user provided name")
-    email = models.CharField(max_length=input_box_max_length, help_text="user provided email")
+    name = models.CharField(max_length=input_box_max_length,
+                            help_text="user provided name")
+    email = models.CharField(max_length=input_box_max_length,
+                             help_text="user provided email")

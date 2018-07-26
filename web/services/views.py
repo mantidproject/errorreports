@@ -84,9 +84,11 @@ class ErrorViewSet(viewsets.ModelViewSet):
 
         if "name" in report and "email" in report:
             name = report["name"]
-            name = (name[:input_box_max_length-2] + '..') if len(name) > input_box_max_length else name
+            name = (name[:input_box_max_length-2] + '..') if\
+                len(name) > input_box_max_length else name
             email = report["email"]
-            email = (email[:input_box_max_length-2] + '..') if len(email) > input_box_max_length else email
+            email = (email[:input_box_max_length-2] + '..') if\
+                len(email) > input_box_max_length else email
             if UserDetails.objects.filter(email=email).exists():
                 user = UserDetails.objects.get(email=email)
             else:
