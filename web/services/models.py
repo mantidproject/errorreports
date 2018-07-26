@@ -1,4 +1,5 @@
 from django.db import models
+from services.constants import input_box_max_length
 
 
 class ErrorReport(models.Model):
@@ -30,5 +31,5 @@ class ErrorReport(models.Model):
 
 
 class UserDetails(models.Model):
-    name = models.CharField(max_length=32, help_text="user provided name")
-    email = models.CharField(max_length=32, help_text="user provided email")
+    name = models.CharField(max_length=input_box_max_length, help_text="user provided name")
+    email = models.CharField(max_length=input_box_max_length, help_text="user provided email")
