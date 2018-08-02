@@ -24,18 +24,53 @@ Much of the following is heavily adapted from the [docker django instructions](h
 https://realpython.com/blog/python/django-development-with-docker-compose-and-machine/, which uses an example repo at
 https://github.com/realpython/dockerizing-django.
 
-To start the services locally you will first need to create a `.env` file next to `docker-compose.yml` containing arbitary information in the following fields:
-* `DB_NAME` for example TEST
-* `DB_USER` for example USER
-* `DB_PASS` for example password
-* `HOST_PORT` just set to 8082 unless you have reason not to.
+To start the services locally you will first need to create a `.env` file next to `docker-compose.yml` containing, for example:
 
-Now start the services with:
+
+        DB_NAME=Test
+        DB_USER=YourName
+        DB_PASS=APassWord
+        HOST_PORT=8082
+
+The values of each key are irrelevant for the test setup. For production they need to be kept secret. Now start the services with:
 
 ```
 $ bin/boot.sh
 ```
 and the site will be viewable at `localhost:8082`.
+
+To stop the services execute:
+
+```
+$ bin/shutdown.sh
+```
+which ensures that the webdata volume is cleaned up.
+
+OSX Setup
+---------
+
+On OSX we can use a `VirtualBox` driver to execute the `Dockerfile`
+
+1. Edit the `.env` file to look something like:
+
+        DB_NAME=Test
+        DB_USER=YourName
+        DB_PASS=APassWord
+        HOST_PORT=8082
+
+2. Create a virtual machine called `development`
+
+        docker-machine create development --driver virtualbox
+        
+3. `docker-machine env development`
+4. `eval $(docker-machine env development)`
+5. `./bin/boot.sh` takes some time to run!
+6. Finally, you need to forward the ports from VirtualBox so that they are accessible on your host machine.
+
+        VBoxManage controlvm "development" natpf1 "tcp-port8082,tcp,,8082,,8082";
+
+Misc Docker Commands
+--------------------
 
 The [`docker-compose exec`](https://docs.docker.com/compose/reference/exec/) command can be used to run commands within
 the various containers:
@@ -69,29 +104,6 @@ Then change to the correct database (defined in the `.env` file as `django`) and
 ```
 $ docker-compose exec web bash
 ```
-
-OSX Setup
----------
-
-On OSX we can use a `VirtualBox` driver to execute the `Dockerfile`
-
-1. Edit the `.env` file to look something like:
-
-        DB_NAME=Test
-        DB_USER=YourName
-        DB_PASS=APassWord
-        HOST_PORT=8082
-
-2. Create a virtual machine called `development`
-
-        docker-machine create development --driver virtualbox
-        
-3. `docker-machine env development`
-4. `eval $(docker-machine env development)`
-5. `./bin/boot.sh` takes some time to run!
-6. Finally, you need to forward the ports from VirtualBox so that they are accessible on your host machine.
-
-        VBoxManage controlvm "development" natpf1 "tcp-port8082,tcp,,8082,,8082";
 
 Delete things
 =============
