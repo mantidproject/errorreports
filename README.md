@@ -24,10 +24,11 @@ Much of the following is heavily adapted from the [docker django instructions](h
 https://realpython.com/blog/python/django-development-with-docker-compose-and-machine/, which uses an example repo at
 https://github.com/realpython/dockerizing-django.
 
-To start the services locally you will first need to create a `.env` file next to `docker-compose.yml` containing the the following information:
-* `DB_NAME`
-* `DB_USER`
-* `DB_PASS`
+To start the services locally you will first need to create a `.env` file next to `docker-compose.yml` containing arbitary information in the following fields:
+* `DB_NAME` for example TEST
+* `DB_USER` for example USER
+* `DB_PASS` for example password
+* `HOST_PORT` just set to 8082 unless you have reason not to.
 
 Now start the services with:
 
