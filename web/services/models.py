@@ -28,7 +28,7 @@ class ErrorReport(models.Model):
     upTime = models.CharField(max_length=32, default="")
     user = models.ForeignKey('UserDetails', on_delete=models.SET_NULL,
                              blank=True, null=True)
-    textBox = models.CharField(max_length=free_text_max_length, default="", 
+    textBox = models.CharField(max_length=free_text_max_length, default="",
                                null="True")
 
 
