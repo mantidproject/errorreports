@@ -80,6 +80,7 @@ class ErrorViewSet(viewsets.ModelViewSet):
         facility = report["facility"]
         upTime = report["upTime"]
         exitCode = report["exitCode"]
+        textBox = report["textBox"] if "textBox" in report else ""
 
         if "name" in report and "email" in report:
             name = report["name"]
@@ -107,7 +108,8 @@ class ErrorViewSet(viewsets.ModelViewSet):
                                               facility=facility,
                                               upTime=upTime,
                                               exitCode=exitCode,
-                                              user=user)
+                                              user=user,
+                                              textBox=textBox)
         obj.save()
 
 

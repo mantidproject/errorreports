@@ -27,8 +27,9 @@ class ErrorReport(models.Model):
     upTime = models.CharField(max_length=32, default="")
     user = models.ForeignKey('UserDetails', on_delete=models.SET_NULL,
                              blank=True, null=True)
+    textBox = models.CharField(max_length=3200, default="", null="True")
 
 
 class UserDetails(models.Model):
-    name = models.CharField(max_length=32, help_text="user provided name")
-    email = models.CharField(max_length=32, help_text="user provided email")
+    name = models.CharField(max_length=128, help_text="user provided name")
+    email = models.CharField(max_length=128, help_text="user provided email")

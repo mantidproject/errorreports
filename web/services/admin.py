@@ -19,6 +19,7 @@ class ErrorAdmin(admin.ModelAdmin):
                     'facility',
                     'exitCode',
                     'upTime',
+                    'textBox',
                     'get_user_email')
 
     def get_user_email(self, obj):
