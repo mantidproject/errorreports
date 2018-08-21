@@ -1,4 +1,5 @@
 from django.db import models
+from services.constants import input_box_max_length, free_text_max_length
 
 
 class ErrorReport(models.Model):
@@ -27,9 +28,12 @@ class ErrorReport(models.Model):
     upTime = models.CharField(max_length=32, default="")
     user = models.ForeignKey('UserDetails', on_delete=models.SET_NULL,
                              blank=True, null=True)
-    textBox = models.CharField(max_length=3200, default="", null="True")
+    textBox = models.CharField(max_length=free_text_max_length, default="", 
+                               null="True")
 
 
 class UserDetails(models.Model):
-    name = models.CharField(max_length=128, help_text="user provided name")
-    email = models.CharField(max_length=128, help_text="user provided email")
+    name = models.CharField(max_length=input_box_max_length,
+                            help_text="user provided name")
+    email = models.CharField(max_length=input_box_max_length,
+                             help_text="user provided email")

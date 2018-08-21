@@ -1,4 +1,5 @@
 from services.models import ErrorReport, UserDetails
+from services.constants import input_box_max_length
 from rest_framework import response, viewsets
 from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny
@@ -84,7 +85,11 @@ class ErrorViewSet(viewsets.ModelViewSet):
 
         if "name" in report and "email" in report:
             name = report["name"]
+            name = (name[:input_box_max_length-2] + '..') if\
+                len(name) > input_box_max_length else name
             email = report["email"]
+            email = (email[:input_box_max_length-2] + '..') if\
+                len(email) > input_box_max_length else email
             if UserDetails.objects.filter(email=email).exists():
                 user = UserDetails.objects.get(email=email)
             else:
