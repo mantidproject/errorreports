@@ -12,10 +12,6 @@ class Migration(migrations.Migration):
     ]
 
     operations = [
-        migrations.RemoveField(
-            model_name='errorreport',
-            name='textbox',
-        ),
         migrations.AddField(
             model_name='errorreport',
             name='textBox',
