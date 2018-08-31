@@ -90,11 +90,9 @@ class ErrorViewSet(viewsets.ModelViewSet):
             email = report["email"]
             email = (email[:input_box_max_length-2] + '..') if\
                 len(email) > input_box_max_length else email
-            if UserDetails.objects.filter(email=email).exists():
-                user = UserDetails.objects.get(email=email)
-            else:
-                user, created = UserDetails.objects.get_or_create(name=name,
-                                                                  email=email)
+
+            user, created = UserDetails.objects.get_or_create(name=name,
+                                                              email=email)
             user.save()
         else:
             user = None
