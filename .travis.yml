@@ -10,11 +10,8 @@ python:
   # sync with web/Dockerfile
   - "3.6"
 
-cache: pip
-
 install:
   - pip install flake8
-  - pip install -r travis_requirements.txt
 
 script:
   - sh run_web_tests.sh
