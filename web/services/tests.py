@@ -4,6 +4,7 @@ from services.views import ErrorViewSet
 from django.test import RequestFactory
 import json
 
+
 class ViewsTest(TestCase):
     def test_that_post_request_of_just_public_data_returns201(self):
         error_view_set = ErrorViewSet()
@@ -25,7 +26,8 @@ class ViewsTest(TestCase):
             "exitCode": "",
             "upTime": "00:00:06.795771000"
             }
-        request = request_factory.post('/api/error', data=json.dumps(body), content_type='application/json')
+        request = request_factory.post('/api/error', data=json.dumps(body),
+                                       content_type='application/json')
 
         response = error_view_set.create(request)
 
@@ -53,7 +55,8 @@ class ViewsTest(TestCase):
             "name": "",
             "email": ""
             }
-        request = request_factory.post('/api/error', data=json.dumps(body), content_type='application/json')
+        request = request_factory.post('/api/error', data=json.dumps(body),
+                                       content_type='application/json')
 
         response = error_view_set.create(request)
 
@@ -81,7 +84,8 @@ class ViewsTest(TestCase):
             "name": "public",
             "email": "public@email"
             }
-        request = request_factory.post('/api/error', data=json.dumps(body), content_type='application/json')
+        request = request_factory.post('/api/error', data=json.dumps(body),
+                                       content_type='application/json')
 
         response = error_view_set.create(request)
 
@@ -108,9 +112,9 @@ class ViewsTest(TestCase):
             "upTime": "00:00:06.795771000",
             "textBox": "Explanatory text"
             }
-        request = request_factory.post('/api/error', data=json.dumps(body), content_type='application/json')
+        request = request_factory.post('/api/error', data=json.dumps(body),
+                                       content_type='application/json')
 
         response = error_view_set.create(request)
 
         self.assertEqual(201, response.status_code)
-
