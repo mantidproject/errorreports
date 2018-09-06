@@ -1,8 +1,11 @@
 from services.models import ErrorReport, UserDetails
 from services.constants import input_box_max_length
-from rest_framework import response, viewsets
+from rest_framework import response, viewsets, views
 from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny
+from rest_framework.parsers import FileUploadParser, MultiPartParser
+from rest_framework.response import Response
+from rest_framework import status
 from services.serializer import ErrorSerializer
 import django_filters
 from django.http import HttpResponse
@@ -46,6 +49,21 @@ class ErrorFilter(django_filters.FilterSet):
         model = ErrorReport
         fields = '__all__'
         order_by = ['-dateTime']
+
+
+class RecoveryFileUploadView(views.APIView):
+    parser_classes = (MultiPartParser, FileUploadParser)
+
+    def get(self, request):
+        return HttpResponse("Please supply recovery data as POST.")
+
+    def post(self, request):
+        up_file = request.FILES['file']
+        destination = open('/usr/src/app/recovery/' + up_file.name, 'wb+')
+        for chunk in up_file.chunks():
+            destination.write(chunk)
+        destination.close()
+        return Response(up_file.name, status.HTTP_201_CREATED)
 
 
 class ErrorViewSet(viewsets.ModelViewSet):

@@ -30,6 +30,7 @@ services:
     build: ./web
     volumes:
       - webdata:/usr/src/app
+      - recoverydata:/usr/src/app/recovery
     expose:
       # Change the value in the nginx configuration if this is changed
       - "8000"
@@ -56,3 +57,4 @@ volumes:
   webdata:
   # If this is changed remember to update the bin/boot.sh script
   pgdata:
+  recoverydata:

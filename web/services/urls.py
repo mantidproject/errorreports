@@ -5,8 +5,10 @@ from services import views
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r'error', views.ErrorViewSet)
+# router.register(r'recovery', views.RecoveryFileUploadView)
 
 urlpatterns = [
     url(r'^$', views.api_root),
-    url(r'^', include(router.urls))
+    url(r'^', include(router.urls)),
+    url(r'recovery', views.RecoveryFileUploadView.as_view())
 ]
