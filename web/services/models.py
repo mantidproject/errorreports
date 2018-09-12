@@ -6,6 +6,7 @@ from django.conf import settings
 
 fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
+
 class ErrorReport(models.Model):
     # md5 ex: "c5a9b601408709f47417bcba3571262b"
     uid = models.CharField(max_length=32, help_text="md5 version of username")
@@ -34,8 +35,9 @@ class ErrorReport(models.Model):
                              blank=True, null=True)
     textBox = models.CharField(max_length=free_text_max_length, default="",
                                null="True")
-    recoveryFile = models.ForeignKey('RecoveryFiles', on_delete=models.SET_NULL,
-                             blank=True, null=True)
+    recoveryFile = models.ForeignKey('RecoveryFiles',
+                                     on_delete=models.SET_NULL,
+                                     blank=True, null=True)
 
 
 class UserDetails(models.Model):
@@ -44,6 +46,9 @@ class UserDetails(models.Model):
     email = models.CharField(max_length=input_box_max_length,
                              help_text="user provided email")
 
+
 class RecoveryFiles(models.Model):
-    fileHash = models.CharField(max_length=32, help_text="md5 name of recovery file", default='')
+    fileHash = models.CharField(max_length=32,
+                                help_text="md5 name of recovery file",
+                                default='')
     fileStore = models.FileField(storage=fs, null=True)

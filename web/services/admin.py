@@ -1,5 +1,4 @@
 from django.contrib import admin
-from django.core import urlresolvers
 from django.utils.html import format_html
 # Register your models here.
 from .models import ErrorReport, UserDetails, RecoveryFiles
@@ -28,9 +27,11 @@ class ErrorAdmin(admin.ModelAdmin):
 
     def get_recoveryFile(self, obj):
         if obj.recoveryFile:
-            link = '{}{}'.format(settings.MEDIA_URL, obj.recoveryFile.fileStore)
-            return format_html('<a href="{}">{}</a>', link, obj.recoveryFile.fileStore)
-        else: 
+            link = '{}{}'.\
+                format(settings.MEDIA_URL, obj.recoveryFile.fileStore)
+            return format_html('<a href="{}">{}</a>',
+                               link, obj.recoveryFile.fileStore)
+        else:
             return ''
     get_recoveryFile.short_description = 'Recovery File'
 
@@ -38,6 +39,7 @@ class ErrorAdmin(admin.ModelAdmin):
 class UserAdmin(admin.ModelAdmin):
     list_display = ('name',
                     'email')
+
 
 class FilesAdmin(admin.ModelAdmin):
     list_display = ('fileHash', 'fileStore')
