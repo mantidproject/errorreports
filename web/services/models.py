@@ -1,4 +1,11 @@
 from django.db import models
+from services.constants import input_box_max_length, free_text_max_length
+from django.core.files.storage import FileSystemStorage
+from django.conf import settings
+from django.db.models import signals
+from celery_app.tasks import send_notification_email
+
+fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
 
 class ErrorReport(models.Model):
@@ -27,8 +34,31 @@ class ErrorReport(models.Model):
     upTime = models.CharField(max_length=32, default="")
     user = models.ForeignKey('UserDetails', on_delete=models.SET_NULL,
                              blank=True, null=True)
+    textBox = models.CharField(max_length=free_text_max_length, default="",
+                               null="True")
+    recoveryFile = models.ForeignKey('RecoveryFiles',
+                                     on_delete=models.SET_NULL,
+                                     blank=True, null=True)
 
 
 class UserDetails(models.Model):
-    name = models.CharField(max_length=32, help_text="user provided name")
-    email = models.CharField(max_length=32, help_text="user provided email")
+    name = models.CharField(max_length=input_box_max_length,
+                            help_text="user provided name")
+    email = models.CharField(max_length=input_box_max_length,
+                             help_text="user provided email")
+
+
+class RecoveryFiles(models.Model):
+    fileHash = models.CharField(max_length=32,
+                                help_text="md5 name of recovery file",
+                                default='')
+    fileStore = models.FileField(storage=fs, null=True)
+
+def send_email_notification(sender, instance, signal, *args, **kwargs):
+    name = instance.user.name if instance.user else ''
+    email = instance.user.email if instance.user else ''
+    text_box = instance.textBox
+    if name or email or text_box:
+        send_notification_email.delay(name, email, text_box)
+
+signals.post_save.connect(send_email_notification, sender=ErrorReport)

@@ -27,6 +27,8 @@ DEBUG = os.getenv('DEBUG', 'NO').lower() in ('on', 'true', 'y', 'yes')
 
 ALLOWED_HOSTS = ['*']
 
+MEDIA_ROOT = '/usr/src/app/recovery'
+MEDIA_URL = '/api/download/'
 
 # Application definition
 
@@ -148,6 +150,12 @@ if DEBUG:
 EMAIL_USE_TLS = True
 EMAIL_HOST = 'smtp.gmail.com'
 EMAIL_HOST_USER = 'mantidproject@gmail.com'
-EMAIL_HOST_PASSWORD = os.getenv('MAIL_PASS', '')
-EMAIL_PORT = os.getenv('MAIL_PORT', '')
-ERROR_EMAIL = os.getenv('ERROR_MAIL', '')
+EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
+EMAIL_PORT = os.getenv('EMAIL_PORT', '')
+ERROR_EMAIL = os.getenv('ERROR_EMAIL', '')
+
+CELERY_BROKER_URL = 'redis://redis:6379'
+CELERY_RESULT_BACKEND = 'redis://redis:6379'
+CELERY_ACCEPT_CONTENT = ['application/json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'

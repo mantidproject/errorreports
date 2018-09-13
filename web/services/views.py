@@ -1,14 +1,22 @@
-from services.models import ErrorReport, UserDetails
-from rest_framework import response, viewsets
+from services.models import ErrorReport, UserDetails, RecoveryFiles
+from services.constants import input_box_max_length
+from rest_framework import response, viewsets, views
 from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny
+from rest_framework.parsers import FileUploadParser, MultiPartParser
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from django.conf import settings
+from django.core.files import File
 from services.serializer import ErrorSerializer
 import django_filters
 from django.http import HttpResponse
 import json
 import hashlib
-from django.core.mail import send_mail
 from django.conf import settings
+import os
+
 
 
 class WithinDateFilter(django_filters.DateFilter):
@@ -49,6 +57,46 @@ class ErrorFilter(django_filters.FilterSet):
         order_by = ['-dateTime']
 
 
+class RecoveryFileUploadView(views.APIView):
+    parser_classes = (MultiPartParser, FileUploadParser)
+
+    def get(self, request):
+        return HttpResponse("Please supply recovery data as POST.")
+
+    def post(self, request):
+        up_file = request.FILES['file']
+        file_hash = up_file.name.replace('.zip', '')
+        corrosponding_report = RecoveryFiles.\
+            objects.filter(fileHash=file_hash).count()
+        if corrosponding_report:
+            my_file = File(up_file)
+            obj = RecoveryFiles.objects.get(fileHash=file_hash)
+            obj.fileStore = my_file
+            obj.save()
+            return Response(up_file.name, status.HTTP_201_CREATED)
+        return Response(up_file.name, status.HTTP_403_FORBIDDEN)
+
+
+class RecoveryFileDownloadView(views.APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, file_hash='No Hash Supplied'):
+        if settings.MEDIA_ROOT not in os.path.\
+                abspath(os.path.join(settings.MEDIA_ROOT, file_hash)):
+            return Response(file_hash, status.HTTP_403_FORBIDDEN)
+
+        path_to_file = os.path.\
+            abspath(os.path.join(settings.MEDIA_ROOT, file_hash))
+        if os.path.exists(path_to_file):
+            zip_file = open(path_to_file, 'br')
+            response = HttpResponse(zip_file,
+                                    content_type='application/force-download')
+            response['Content-Disposition'] \
+                = 'attachment; filename="%s"' % file_hash
+            return response
+        return Response(path_to_file, status.HTTP_404_NOT_FOUND)
+
+
 class ErrorViewSet(viewsets.ModelViewSet):
     """All errors registered in the system. Valid filter parameters are:
     'datemin' and 'datemax'.
@@ -62,30 +110,10 @@ class ErrorViewSet(viewsets.ModelViewSet):
         if request.method == 'POST':
             post_data = json.loads(request.body)
             self.saveErrorReport(post_data)
-            if "email" in post_data:
-                self.send_mail(post_data)
             return HttpResponse(status=201)
         else:
             return HttpResponse("Please supply feature error "
                                 "report data as POST.")
-
-    def send_mail(self, post_data):
-        to_address = [settings.ERROR_EMAIL]
-        print(to_address)
-        subject = 'User error report'
-
-        message = (
-                'An error report has been submitted by {}'
-                ' who provided the following email {}.'
-                '\n \n The recieved post data was {} '
-                ).format(post_data['name'], post_data['email'], post_data)
-
-        send_mail(subject,
-                  message,
-                  'mantidproject@gmail.com',
-                  to_address,
-                  fail_silently=False,
-                  )
 
     def saveErrorReport(self, report):
         osReadable = report["osReadable"]
@@ -102,18 +130,32 @@ class ErrorViewSet(viewsets.ModelViewSet):
         facility = report["facility"]
         upTime = report["upTime"]
         exitCode = report["exitCode"]
+        textBox = report["textBox"] if "textBox" in report else ""
 
         if "name" in report and "email" in report:
             name = report["name"]
+            name = (name[:input_box_max_length-2] + '..') if\
+                len(name) > input_box_max_length else name
             email = report["email"]
-            if UserDetails.objects.filter(email=email).exists():
-                user = UserDetails.objects.get(email=email)
-            else:
-                user, created = UserDetails.objects.get_or_create(name=name,
-                                                                  email=email)
+            email = (email[:input_box_max_length-2] + '..') if\
+                len(email) > input_box_max_length else email
+
+            user, created = UserDetails.objects.get_or_create(name=name,
+                                                              email=email)
             user.save()
         else:
             user = None
+
+        if "fileHash" in report:
+            fileHash = report["fileHash"]
+            if fileHash:
+                file_object, created =\
+                    RecoveryFiles.objects.get_or_create(fileHash=fileHash)
+                file_object.save()
+            else:
+                file_object = None
+        else:
+            file_object = None
 
         obj, created = \
             ErrorReport.objects.get_or_create(osReadable=osReadable,
@@ -129,8 +171,11 @@ class ErrorViewSet(viewsets.ModelViewSet):
                                               facility=facility,
                                               upTime=upTime,
                                               exitCode=exitCode,
-                                              user=user)
-        obj.save()
+                                              user=user,
+                                              textBox=textBox,
+                                              recoveryFile=file_object)
+        if not created:
+            obj.save()
 
 
 @api_view(('GET',))
