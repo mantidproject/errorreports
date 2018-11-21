@@ -1,5 +1,10 @@
 from django.db import models
 from services.constants import input_box_max_length, free_text_max_length
+from django.core.files.storage import FileSystemStorage
+from django.conf import settings
+
+
+fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
 
 class ErrorReport(models.Model):
@@ -30,6 +35,9 @@ class ErrorReport(models.Model):
                              blank=True, null=True)
     textBox = models.CharField(max_length=free_text_max_length, default="",
                                null="True")
+    recoveryFile = models.ForeignKey('RecoveryFiles',
+                                     on_delete=models.SET_NULL,
+                                     blank=True, null=True)
 
 
 class UserDetails(models.Model):
@@ -37,3 +45,10 @@ class UserDetails(models.Model):
                             help_text="user provided name")
     email = models.CharField(max_length=input_box_max_length,
                              help_text="user provided email")
+
+
+class RecoveryFiles(models.Model):
+    fileHash = models.CharField(max_length=32,
+                                help_text="md5 name of recovery file",
+                                default='')
+    fileStore = models.FileField(storage=fs, null=True)

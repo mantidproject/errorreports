@@ -27,6 +27,8 @@ DEBUG = os.getenv('DEBUG', 'NO').lower() in ('on', 'true', 'y', 'yes')
 
 ALLOWED_HOSTS = ['*']
 
+MEDIA_ROOT = '/usr/src/app/recovery'
+MEDIA_URL = '/api/download/'
 
 # Application definition
 

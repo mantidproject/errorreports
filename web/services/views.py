@@ -1,13 +1,20 @@
-from services.models import ErrorReport, UserDetails
+from services.models import ErrorReport, UserDetails, RecoveryFiles
 from services.constants import input_box_max_length
-from rest_framework import response, viewsets
+from rest_framework import response, viewsets, views
 from rest_framework.decorators import api_view
 from rest_framework.permissions import AllowAny
+from rest_framework.parsers import FileUploadParser, MultiPartParser
+from rest_framework.response import Response
+from rest_framework.permissions import IsAuthenticated
+from rest_framework import status
+from django.conf import settings
+from django.core.files import File
 from services.serializer import ErrorSerializer
 import django_filters
 from django.http import HttpResponse
 import json
 import hashlib
+import os
 
 
 class WithinDateFilter(django_filters.DateFilter):
@@ -46,6 +53,46 @@ class ErrorFilter(django_filters.FilterSet):
         model = ErrorReport
         fields = '__all__'
         order_by = ['-dateTime']
+
+
+class RecoveryFileUploadView(views.APIView):
+    parser_classes = (MultiPartParser, FileUploadParser)
+
+    def get(self, request):
+        return HttpResponse("Please supply recovery data as POST.")
+
+    def post(self, request):
+        up_file = request.FILES['file']
+        file_hash = up_file.name.replace('.zip', '')
+        corrosponding_report = RecoveryFiles.\
+            objects.filter(fileHash=file_hash).count()
+        if corrosponding_report:
+            my_file = File(up_file)
+            obj = RecoveryFiles.objects.get(fileHash=file_hash)
+            obj.fileStore = my_file
+            obj.save()
+            return Response(up_file.name, status.HTTP_201_CREATED)
+        return Response(up_file.name, status.HTTP_403_FORBIDDEN)
+
+
+class RecoveryFileDownloadView(views.APIView):
+    permission_classes = (IsAuthenticated,)
+
+    def get(self, request, file_hash='No Hash Supplied'):
+        if settings.MEDIA_ROOT not in os.path.\
+                abspath(os.path.join(settings.MEDIA_ROOT, file_hash)):
+            return Response(file_hash, status.HTTP_403_FORBIDDEN)
+
+        path_to_file = os.path.\
+            abspath(os.path.join(settings.MEDIA_ROOT, file_hash))
+        if os.path.exists(path_to_file):
+            zip_file = open(path_to_file, 'br')
+            response = HttpResponse(zip_file,
+                                    content_type='application/force-download')
+            response['Content-Disposition'] \
+                = 'attachment; filename="%s"' % file_hash
+            return response
+        return Response(path_to_file, status.HTTP_404_NOT_FOUND)
 
 
 class ErrorViewSet(viewsets.ModelViewSet):
@@ -97,6 +144,17 @@ class ErrorViewSet(viewsets.ModelViewSet):
         else:
             user = None
 
+        if "fileHash" in report:
+            fileHash = report["fileHash"]
+            if fileHash:
+                file_object, created =\
+                    RecoveryFiles.objects.get_or_create(fileHash=fileHash)
+                file_object.save()
+            else:
+                file_object = None
+        else:
+            file_object = None
+
         obj, created = \
             ErrorReport.objects.get_or_create(osReadable=osReadable,
                                               application=application,
@@ -112,7 +170,8 @@ class ErrorViewSet(viewsets.ModelViewSet):
                                               upTime=upTime,
                                               exitCode=exitCode,
                                               user=user,
-                                              textBox=textBox)
+                                              textBox=textBox,
+                                              recoveryFile=file_object)
         obj.save()
 
 
