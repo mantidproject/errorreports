@@ -2,6 +2,7 @@ from django.core.mail import send_mail
 from celery import shared_task
 from django.conf import settings
 
+
 @shared_task
 def send_notification_email(name, email, text_box):
     to_address = [settings.ERROR_EMAIL]

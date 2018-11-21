@@ -14,9 +14,7 @@ import django_filters
 from django.http import HttpResponse
 import json
 import hashlib
-from django.conf import settings
 import os
-
 
 
 class WithinDateFilter(django_filters.DateFilter):
@@ -25,7 +23,7 @@ class WithinDateFilter(django_filters.DateFilter):
         if value:
             # date_value = value.replace(hour=0, minute=0, second=0)
             filter_lookups = {
-                "%s__range" % (self.name, ): (
+                "%s__range" % (self.name,): (
                     value,
                     value + timedelta(days=1),
                 ),
@@ -66,7 +64,7 @@ class RecoveryFileUploadView(views.APIView):
     def post(self, request):
         up_file = request.FILES['file']
         file_hash = up_file.name.replace('.zip', '')
-        corrosponding_report = RecoveryFiles.\
+        corrosponding_report = RecoveryFiles. \
             objects.filter(fileHash=file_hash).count()
         if corrosponding_report:
             my_file = File(up_file)
@@ -81,11 +79,11 @@ class RecoveryFileDownloadView(views.APIView):
     permission_classes = (IsAuthenticated,)
 
     def get(self, request, file_hash='No Hash Supplied'):
-        if settings.MEDIA_ROOT not in os.path.\
+        if settings.MEDIA_ROOT not in os.path. \
                 abspath(os.path.join(settings.MEDIA_ROOT, file_hash)):
             return Response(file_hash, status.HTTP_403_FORBIDDEN)
 
-        path_to_file = os.path.\
+        path_to_file = os.path. \
             abspath(os.path.join(settings.MEDIA_ROOT, file_hash))
         if os.path.exists(path_to_file):
             zip_file = open(path_to_file, 'br')
@@ -134,10 +132,10 @@ class ErrorViewSet(viewsets.ModelViewSet):
 
         if "name" in report and "email" in report:
             name = report["name"]
-            name = (name[:input_box_max_length-2] + '..') if\
+            name = (name[:input_box_max_length - 2] + '..') if \
                 len(name) > input_box_max_length else name
             email = report["email"]
-            email = (email[:input_box_max_length-2] + '..') if\
+            email = (email[:input_box_max_length - 2] + '..') if \
                 len(email) > input_box_max_length else email
 
             user, created = UserDetails.objects.get_or_create(name=name,
@@ -149,7 +147,7 @@ class ErrorViewSet(viewsets.ModelViewSet):
         if "fileHash" in report:
             fileHash = report["fileHash"]
             if fileHash:
-                file_object, created =\
+                file_object, created = \
                     RecoveryFiles.objects.get_or_create(fileHash=fileHash)
                 file_object.save()
             else:
