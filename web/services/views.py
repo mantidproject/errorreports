@@ -2,17 +2,16 @@ from services.models import ErrorReport, UserDetails, RecoveryFiles
 from services.constants import input_box_max_length
 from rest_framework import response, viewsets, views
 from rest_framework.decorators import api_view
-from rest_framework.permissions import AllowAny
 from rest_framework.parsers import FileUploadParser, MultiPartParser
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated, IsAuthenticatedOrReadOnly, IsAdminUser, BasePermission
+from rest_framework.permissions import (IsAuthenticated,
+                                        IsAdminUser, BasePermission)
 from rest_framework import status
 from django.conf import settings
 from django.core.files import File
 from services.serializer import ErrorSerializer
 import django_filters
 from django.http import HttpResponse
-import json
 import hashlib
 import os
 import pytz
@@ -25,7 +24,7 @@ class WithinDateFilter(django_filters.DateFilter):
         if value:
             # date_value = value.replace(hour=0, minute=0, second=0)
             filter_lookups = {
-                "%s__range" % (self.name, ): (
+                "%s__range" % (self.name,): (
                     value,
                     value + timedelta(days=1),
                 ),
@@ -66,9 +65,10 @@ class RecoveryFileUploadView(views.APIView):
     def post(self, request):
         up_file = request.FILES['file']
         if up_file.size > 1.049e+7:
-            return Response('Provided file is too large size {}'.format(up_file.size), status.HTTP_403_FORBIDDEN)
+            return Response('Provided file is too large size {}'
+                            .format(up_file.size), status.HTTP_403_FORBIDDEN)
         file_hash = up_file.name.replace('.zip', '')
-        corrosponding_report = RecoveryFiles.\
+        corrosponding_report = RecoveryFiles. \
             objects.filter(fileHash=file_hash).count()
         if corrosponding_report:
             my_file = File(up_file)
@@ -83,11 +83,11 @@ class RecoveryFileDownloadView(views.APIView):
     permission_classes = (IsAuthenticated, IsAdminUser)
 
     def get(self, request, file_hash='No Hash Supplied'):
-        if settings.MEDIA_ROOT not in os.path.\
+        if settings.MEDIA_ROOT not in os.path. \
                 abspath(os.path.join(settings.MEDIA_ROOT, file_hash)):
             return Response(file_hash, status.HTTP_403_FORBIDDEN)
 
-        path_to_file = os.path.\
+        path_to_file = os.path. \
             abspath(os.path.join(settings.MEDIA_ROOT, file_hash))
         if os.path.exists(path_to_file):
             zip_file = open(path_to_file, 'br')
@@ -120,7 +120,7 @@ class ErrorViewSet(viewsets.ModelViewSet):
     """
     queryset = ErrorReport.objects.all()
     serializer_class = ErrorSerializer
-    permission_classes = (IsAuthenticatedOrWriteOnly, )
+    permission_classes = (IsAuthenticatedOrWriteOnly,)
     filter_class = ErrorFilter
 
     def create(self, request):
@@ -152,10 +152,10 @@ class ErrorViewSet(viewsets.ModelViewSet):
 
         if "name" in report and "email" in report:
             name = report["name"]
-            name = (name[:input_box_max_length-2] + '..') if\
+            name = (name[:input_box_max_length - 2] + '..') if \
                 len(name) > input_box_max_length else name
             email = report["email"]
-            email = (email[:input_box_max_length-2] + '..') if\
+            email = (email[:input_box_max_length - 2] + '..') if \
                 len(email) > input_box_max_length else email
 
             user, created = UserDetails.objects.get_or_create(name=name,
@@ -167,7 +167,7 @@ class ErrorViewSet(viewsets.ModelViewSet):
         if "fileHash" in report:
             fileHash = report["fileHash"]
             if fileHash:
-                file_object, created =\
+                file_object, created = \
                     RecoveryFiles.objects.get_or_create(fileHash=fileHash)
                 file_object.save()
             else:
