@@ -138,7 +138,8 @@ class ErrorViewSet(viewsets.ModelViewSet):
         uid = report["uid"]
         host = report["host"]
         dateTime = parse_datetime(report["dateTime"])
-        dateTime = pytz.timezone("UTC").localize(dateTime)
+        if dateTime.tzinfo is None:
+            dateTime = pytz.timezone("UTC").localize(dateTime)
         osName = report["osName"]
         osArch = report["osArch"]
         osVersion = report["osVersion"]
