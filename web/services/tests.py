@@ -1,14 +1,14 @@
 # Create your tests here.
 from django.test import TestCase
 from services.views import ErrorViewSet
-from django.test import RequestFactory
+from rest_framework.test import APIRequestFactory
 import json
 
 
 class ViewsTest(TestCase):
     def test_that_post_request_of_just_public_data_returns201(self):
         error_view_set = ErrorViewSet()
-        request_factory = RequestFactory()
+        request_factory = APIRequestFactory()
         body = {
             "osReadable": "Mac OS 10.13.",
             "application": "mantidplot",
@@ -35,7 +35,7 @@ class ViewsTest(TestCase):
 
     def test_that_post_request_with_empty_name_and_email_returns201(self):
         error_view_set = ErrorViewSet()
-        request_factory = RequestFactory()
+        request_factory = APIRequestFactory()
         body = {
             "osReadable": "Mac OS 10.13.",
             "application": "mantidplot",
@@ -64,7 +64,7 @@ class ViewsTest(TestCase):
 
     def test_that_post_request_with_name_and_email_returns201(self):
         error_view_set = ErrorViewSet()
-        request_factory = RequestFactory()
+        request_factory = APIRequestFactory()
         body = {
             "osReadable": "Mac OS 10.13.",
             "application": "mantidplot",
@@ -93,7 +93,7 @@ class ViewsTest(TestCase):
 
     def test_that_post_request_with_textbox_returns201(self):
         error_view_set = ErrorViewSet()
-        request_factory = RequestFactory()
+        request_factory = APIRequestFactory()
         body = {
             "osReadable": "Mac OS 10.13.",
             "application": "mantidplot",
