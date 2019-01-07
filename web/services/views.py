@@ -116,7 +116,7 @@ class IsAuthenticatedOrWriteOnly(BasePermission):
 
 class ErrorViewSet(viewsets.ModelViewSet):
     """All errors registered in the system. Valid filter parameters are:
-    'host', 'uid', 'datemin', 'datemax', and 'date'.
+    'datemin' and 'datemax'.
     """
     queryset = ErrorReport.objects.all()
     serializer_class = ErrorSerializer
@@ -193,7 +193,8 @@ class ErrorViewSet(viewsets.ModelViewSet):
                                               user=user,
                                               textBox=textBox,
                                               recoveryFile=file_object)
-        obj.save()
+        if not created:
+            obj.save()
 
 
 @api_view(('GET',))

@@ -3,6 +3,8 @@ from services.constants import input_box_max_length, free_text_max_length
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
 from django.core.validators import FileExtensionValidator
+from django.db.models import signals
+from celery_app.tasks import send_notification_email
 
 fs = FileSystemStorage(location=settings.MEDIA_ROOT)
 
@@ -54,3 +56,14 @@ class RecoveryFiles(models.Model):
     fileStore = models.FileField(storage=fs, null=True,
                                  validators=[FileExtensionValidator(
                                      allowed_extensions=['zip'])])
+
+
+def send_email_notification(sender, instance, signal, *args, **kwargs):
+    name = instance.user.name if instance.user else ''
+    email = instance.user.email if instance.user else ''
+    text_box = instance.textBox
+    if name or email or text_box:
+        send_notification_email.delay(name, email, text_box)
+
+
+signals.post_save.connect(send_email_notification, sender=ErrorReport)
