@@ -203,5 +203,4 @@ class ErrorViewSet(viewsets.ModelViewSet):
 @api_view(('GET',))
 def api_root(request, format=None):
     return response.Response({
-        'error': "http://localhost:8082/api/error"
     })
