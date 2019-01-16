@@ -18,6 +18,9 @@ import pytz
 from django.utils.dateparse import parse_datetime
 
 
+RECOVERY_FILE_SIZE_MAX_BYTES = 10*1024*1024
+
+
 class WithinDateFilter(django_filters.DateFilter):
     def filter(self, queryset, value):
         from datetime import timedelta
@@ -64,7 +67,7 @@ class RecoveryFileUploadView(views.APIView):
 
     def post(self, request):
         up_file = request.FILES['file']
-        if up_file.size > 1.049e+7:
+        if up_file.size > RECOVERY_FILE_SIZE_MAX_BYTES:
             return Response('Provided file is too large size {}'
                             .format(up_file.size), status.HTTP_403_FORBIDDEN)
         file_hash = up_file.name.replace('.zip', '')

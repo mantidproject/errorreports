@@ -4,6 +4,6 @@ django-filter==1.0.4
 Markdown
 gunicorn
 gevent
-psycopg2
+psycopg2-binary
 celery==4.2.1
 redis==2.10.6
