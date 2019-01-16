@@ -16,6 +16,9 @@ services:
       - DB_PORT
       - SECRET_KEY
 
+  redis:
+    image: "redis:alpine"
+  
   adminer:
     image: adminer
     restart: always
@@ -36,6 +39,7 @@ services:
       - "8000"
     depends_on:
       - postgres
+      - redis
     env_file: .env
     environment:
       - DB_SERVICE
@@ -43,6 +47,28 @@ services:
       - SECRET_KEY
       # Define this in .env for development mode. DO NOT USE IN PRODUCTION
       - DEBUG
+      - MAIL_PASS
+      - MAIL_PORT
+      - ERROR_EMAIL
+  
+  celery:
+    build: ./web
+    command: celery -A celery_app worker -l info
+    volumes:
+      - webdata:/usr/src/app
+    depends_on:
+      - postgres
+      - redis
+    env_file: .env
+    environment:
+      - DB_SERVICE
+      - DB_PORT
+      - SECRET_KEY
+      # Define this in .env for development mode. DO NOT USE IN PRODUCTION
+      - DEBUG
+      - MAIL_PASS
+      - MAIL_PORT
+      - ERROR_EMAIL
 
   nginx:
     restart: always
