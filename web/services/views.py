@@ -2,19 +2,23 @@ from services.models import ErrorReport, UserDetails, RecoveryFiles
 from services.constants import input_box_max_length
 from rest_framework import response, viewsets, views
 from rest_framework.decorators import api_view
-from rest_framework.permissions import AllowAny
 from rest_framework.parsers import FileUploadParser, MultiPartParser
 from rest_framework.response import Response
-from rest_framework.permissions import IsAuthenticated
+from rest_framework.permissions import (IsAuthenticated,
+                                        IsAdminUser, BasePermission)
 from rest_framework import status
 from django.conf import settings
 from django.core.files import File
 from services.serializer import ErrorSerializer
 import django_filters
 from django.http import HttpResponse
-import json
 import hashlib
 import os
+import pytz
+from django.utils.dateparse import parse_datetime
+
+
+RECOVERY_FILE_SIZE_MAX_BYTES = 10*1024*1024
 
 
 class WithinDateFilter(django_filters.DateFilter):
@@ -63,6 +67,9 @@ class RecoveryFileUploadView(views.APIView):
 
     def post(self, request):
         up_file = request.FILES['file']
+        if up_file.size > RECOVERY_FILE_SIZE_MAX_BYTES:
+            return Response('Provided file is too large size {}'
+                            .format(up_file.size), status.HTTP_403_FORBIDDEN)
         file_hash = up_file.name.replace('.zip', '')
         corrosponding_report = RecoveryFiles. \
             objects.filter(fileHash=file_hash).count()
@@ -76,7 +83,7 @@ class RecoveryFileUploadView(views.APIView):
 
 
 class RecoveryFileDownloadView(views.APIView):
-    permission_classes = (IsAuthenticated,)
+    permission_classes = (IsAuthenticated, IsAdminUser)
 
     def get(self, request, file_hash='No Hash Supplied'):
         if settings.MEDIA_ROOT not in os.path. \
@@ -95,18 +102,33 @@ class RecoveryFileDownloadView(views.APIView):
         return Response(path_to_file, status.HTTP_404_NOT_FOUND)
 
 
+class IsAuthenticatedOrWriteOnly(BasePermission):
+    """
+    The request is authenticated as a user, or is a write-only request.
+    """
+
+    def has_permission(self, request, view):
+        WRITE_METHODS = ["POST", ]
+
+        return (
+            request.method in WRITE_METHODS or
+            request.user and
+            request.user.is_authenticated()
+        )
+
+
 class ErrorViewSet(viewsets.ModelViewSet):
     """All errors registered in the system. Valid filter parameters are:
     'datemin' and 'datemax'.
     """
     queryset = ErrorReport.objects.all()
     serializer_class = ErrorSerializer
-    permission_classes = [AllowAny]
+    permission_classes = (IsAuthenticatedOrWriteOnly,)
     filter_class = ErrorFilter
 
     def create(self, request):
         if request.method == 'POST':
-            post_data = json.loads(request.body)
+            post_data = request.data
             self.saveErrorReport(post_data)
             return HttpResponse(status=201)
         else:
@@ -118,7 +140,9 @@ class ErrorViewSet(viewsets.ModelViewSet):
         application = report["application"]
         uid = report["uid"]
         host = report["host"]
-        dateTime = report["dateTime"]
+        dateTime = parse_datetime(report["dateTime"])
+        if dateTime.tzinfo is None:
+            dateTime = pytz.timezone("UTC").localize(dateTime)
         osName = report["osName"]
         osArch = report["osArch"]
         osVersion = report["osVersion"]

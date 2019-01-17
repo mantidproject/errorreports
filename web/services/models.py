@@ -2,6 +2,7 @@ from django.db import models
 from services.constants import input_box_max_length, free_text_max_length
 from django.core.files.storage import FileSystemStorage
 from django.conf import settings
+from django.core.validators import FileExtensionValidator
 from django.db.models import signals
 from celery_app.tasks import send_notification_email
 
@@ -52,7 +53,9 @@ class RecoveryFiles(models.Model):
     fileHash = models.CharField(max_length=32,
                                 help_text="md5 name of recovery file",
                                 default='')
-    fileStore = models.FileField(storage=fs, null=True)
+    fileStore = models.FileField(storage=fs, null=True,
+                                 validators=[FileExtensionValidator(
+                                     allowed_extensions=['zip'])])
 
 
 def send_email_notification(sender, instance, signal, *args, **kwargs):
