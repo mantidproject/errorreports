@@ -1,9 +1,9 @@
-Django==1.11.18
+Django==1.11.16
 djangorestframework==3.6.4
 django-filter==1.0.4
 Markdown
 gunicorn
 gevent
-psycopg2-binary
+psycopg2
 celery==4.2.1
 redis==2.10.6
