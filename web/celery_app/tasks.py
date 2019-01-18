@@ -11,7 +11,7 @@ def send_notification_email(name, email, text_box):
     message = (
         'An error report has been submitted by {}'
         ' who provided the following email {}. '
-        '\nThe following information was sent:\n\n {}' 
+        '\nThe following information was sent:\n\n {}'
         '\n'
         '\n https://errorreports.mantidproject.org/admin/'
     ).format(name, email, text_box)
