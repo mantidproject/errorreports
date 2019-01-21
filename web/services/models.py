@@ -6,6 +6,9 @@ from django.db.models import signals
 from celery_app.tasks import send_notification_email
 
 fs = FileSystemStorage(location=settings.MEDIA_ROOT)
+test_email = 'public_email'
+test_name = 'public_name'
+test_info = 'Something went wrong'
 
 
 class ErrorReport(models.Model):
@@ -57,11 +60,11 @@ class RecoveryFiles(models.Model):
 
 def send_email_notification(sender, instance, signal, *args, **kwargs):
     name = instance.user.name if instance.user and \
-        instance.user.name != 'public_name' else ''
+        instance.user.name != test_name else ''
     email = instance.user.email if instance.user and \
-        instance.user.email != 'public_email' else ''
+        instance.user.email != test_email else ''
     text_box = instance.textBox if instance.textBox and \
-        instance.textBox != 'Something went wrong' else ''
+        instance.textBox != test_info else ''
 
     if name or email or text_box:
         send_notification_email.delay(name, email, text_box)

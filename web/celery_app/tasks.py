@@ -18,7 +18,7 @@ def send_notification_email(name, email, text_box):
 
     send_mail(subject,
               message,
-              'error-reports@mantidproject.org',
+              settings.ERROR_FROM_EMAIL,
               to_address,
               fail_silently=False,
               )

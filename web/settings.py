@@ -153,6 +153,7 @@ EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
 EMAIL_PORT = os.getenv('EMAIL_PORT', '')
 ERROR_EMAIL = os.getenv('ERROR_EMAIL', '')
+ERROR_FROM_EMAIL = os.getenv('ERROR_FROM_EMAIL', '')
 
 CELERY_BROKER_URL = 'redis://redis:6379'
 CELERY_RESULT_BACKEND = 'redis://redis:6379'
