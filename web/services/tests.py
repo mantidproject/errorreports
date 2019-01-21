@@ -1,14 +1,9 @@
 # Create your tests here.
-from django.test import TestCase
-from services.views import ErrorViewSet
-from rest_framework.test import APIRequestFactory
-import json
+from rest_framework.test import APITestCase
 
 
-class ViewsTest(TestCase):
+class ViewsTest(APITestCase):
     def test_that_post_request_of_just_public_data_returns201(self):
-        error_view_set = ErrorViewSet()
-        request_factory = APIRequestFactory()
         body = {
             "osReadable": "Mac OS 10.13.",
             "application": "mantidplot",
@@ -26,16 +21,13 @@ class ViewsTest(TestCase):
             "exitCode": "",
             "upTime": "00:00:06.795771000"
             }
-        request = request_factory.post('/api/error', data=json.dumps(body),
-                                       content_type='application/json')
 
-        response = error_view_set.create(request)
+        url = '/api/error'
+        response = self.client.post(url, body, format='json')
 
         self.assertEqual(201, response.status_code)
 
     def test_that_post_request_with_empty_name_and_email_returns201(self):
-        error_view_set = ErrorViewSet()
-        request_factory = APIRequestFactory()
         body = {
             "osReadable": "Mac OS 10.13.",
             "application": "mantidplot",
@@ -55,16 +47,13 @@ class ViewsTest(TestCase):
             "name": "",
             "email": ""
             }
-        request = request_factory.post('/api/error', data=json.dumps(body),
-                                       content_type='application/json')
 
-        response = error_view_set.create(request)
+        url = '/api/error'
+        response = self.client.post(url, body, format='json')
 
         self.assertEqual(201, response.status_code)
 
     def test_that_post_request_with_name_and_email_returns201(self):
-        error_view_set = ErrorViewSet()
-        request_factory = APIRequestFactory()
         body = {
             "osReadable": "Mac OS 10.13.",
             "application": "mantidplot",
@@ -84,16 +73,13 @@ class ViewsTest(TestCase):
             "name": "public",
             "email": "public@email"
             }
-        request = request_factory.post('/api/error', data=json.dumps(body),
-                                       content_type='application/json')
 
-        response = error_view_set.create(request)
+        url = '/api/error'
+        response = self.client.post(url, body, format='json')
 
         self.assertEqual(201, response.status_code)
 
     def test_that_post_request_with_textbox_returns201(self):
-        error_view_set = ErrorViewSet()
-        request_factory = APIRequestFactory()
         body = {
             "osReadable": "Mac OS 10.13.",
             "application": "mantidplot",
@@ -112,9 +98,8 @@ class ViewsTest(TestCase):
             "upTime": "00:00:06.795771000",
             "textBox": "Explanatory text"
             }
-        request = request_factory.post('/api/error', data=json.dumps(body),
-                                       content_type='application/json')
 
-        response = error_view_set.create(request)
+        url = '/api/error'
+        response = self.client.post(url, body, format='json')
 
         self.assertEqual(201, response.status_code)

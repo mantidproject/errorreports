@@ -31,8 +31,15 @@ To start the services locally you will first need to create a `.env` file next t
         DB_USER=YourName
         DB_PASS=APassWord
         HOST_PORT=8082
+        EMAIL_HOST=smtp.sparkpostmail.com
+        EMAIL_HOST_USER=SMTP_Injection
+        EMAIL_PORT=587
+        EMAIL_HOST_PASSWORD=<Api password need to retrieve from sparkpost>
+        ERROR_EMAIL=<email to recieve reports>   
 
-The values of each key are irrelevant for the test setup. For production they need to be kept secret. Now start the services with:
+The values of each key are irrelevant for the test setup. For production they need to be kept secret. The email enviromental variables may be left out if emailing functionality is not required.
+
+Now start the services with:
 
 ```
 $ bin/boot.sh
@@ -46,6 +53,13 @@ $ bin/shutdown.sh
 ```
 which ensures that the webdata volume is cleaned up.
 
+Working with Django
+-------------------
+
+The first time you create a database you will need to create a Django admin account to access the Django admin interface. To do so first get into the docker container by running `docker exec -it <docker-web-container-name> bash` and then run `python manage.py createsuperuser`.
+
+To remove old recovery files a Django command has been added. Running `docker exec <web-container-name> python manage.py removeolddata` this will remove all recovery files over 30 days old. Supplying a positional integer argument will change the number of days old a file has to be to be removed. The `--all` option will remove all recovery files.
+
 OSX Setup
 ---------
 
@@ -57,6 +71,11 @@ On OSX we can use a `VirtualBox` driver to execute the `Dockerfile`
         DB_USER=YourName
         DB_PASS=APassWord
         HOST_PORT=8082
+        EMAIL_HOST=smtp.sparkpostmail.com
+        EMAIL_HOST_USER=SMTP_Injection
+        EMAIL_PORT=587
+        EMAIL_HOST_PASSWORD=<Api password need to retrieve from sparkpost>
+        ERROR_EMAIL=<email to recieve reports>
 
 2. Create a virtual machine called `development`
 
