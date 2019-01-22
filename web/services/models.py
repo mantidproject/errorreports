@@ -62,14 +62,12 @@ class RecoveryFiles(models.Model):
 
 
 def send_email_notification(sender, instance, signal, *args, **kwargs):
-    name = instance.user.name if instance.user and \
-        instance.user.name != test_name else ''
+    name = instance.user.name if instance.user else ''
     email = instance.user.email if instance.user and \
         instance.user.email != test_email else ''
-    text_box = instance.textBox if instance.textBox and \
-        instance.textBox != test_info else ''
+    text_box = instance.textBox
 
-    if name or email or text_box:
+    if email:
         send_notification_email.delay(name, email, text_box)
 
 
