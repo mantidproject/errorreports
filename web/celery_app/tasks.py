@@ -5,7 +5,8 @@ from django.conf import settings
 
 @shared_task
 def send_notification_email(name, email, text_box):
-    to_address = [settings.ERROR_EMAIL]
+    to_address = [settings.EMAIL_TO_ADDRESS]
+    from_address = settings.EMAIL_FROM_ADDRESS
     subject = 'User error report'
 
     message = (
@@ -18,7 +19,7 @@ def send_notification_email(name, email, text_box):
 
     send_mail(subject,
               message,
-              settings.ERROR_FROM_EMAIL,
+              from_address,
               to_address,
               fail_silently=False,
               )
