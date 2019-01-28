@@ -35,7 +35,8 @@ To start the services locally you will first need to create a `.env` file next t
         EMAIL_HOST_USER=SMTP_Injection
         EMAIL_PORT=587
         EMAIL_HOST_PASSWORD=<Api password need to retrieve from sparkpost>
-        ERROR_EMAIL=<email to recieve reports>   
+        EMAIL_TO_ADDRESS=<email to recieve reports>
+        EMAIL_FROM_ADDRESS=error-reports@mantidproject.org   
 
 The values of each key are irrelevant for the test setup. For production they need to be kept secret. The email enviromental variables may be left out if emailing functionality is not required.
 
@@ -75,7 +76,8 @@ On OSX we can use a `VirtualBox` driver to execute the `Dockerfile`
         EMAIL_HOST_USER=SMTP_Injection
         EMAIL_PORT=587
         EMAIL_HOST_PASSWORD=<Api password need to retrieve from sparkpost>
-        ERROR_EMAIL=<email to recieve reports>
+        EMAIL_TO_ADDRESS=<email to recieve reports>
+        EMAIL_FROM_ADDRESS=error-reports@mantidproject.org
 
 2. Create a virtual machine called `development`
 

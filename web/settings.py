@@ -148,11 +148,12 @@ if DEBUG:
     }
 
 EMAIL_USE_TLS = True
-EMAIL_HOST = 'smtp.gmail.com'
-EMAIL_HOST_USER = 'mantidproject@gmail.com'
+EMAIL_HOST = os.getenv('EMAIL_HOST', '')
+EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
 EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
 EMAIL_PORT = os.getenv('EMAIL_PORT', '')
-ERROR_EMAIL = os.getenv('ERROR_EMAIL', '')
+EMAIL_TO_ADDRESS = os.getenv('EMAIL_TO_ADDRESS', '')
+EMAIL_FROM_ADDRESS = os.getenv('EMAIL_FROM_ADDRESS', '')
 
 CELERY_BROKER_URL = 'redis://redis:6379'
 CELERY_RESULT_BACKEND = 'redis://redis:6379'
