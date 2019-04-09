@@ -23,7 +23,7 @@ class ViewsTest(APITestCase):
             }
 
         url = '/api/error'
-        response = self.client.post(url, body, format='json')
+        response = self.client.post(url, body, format='json', secure=True)
 
         self.assertEqual(201, response.status_code)
 
@@ -49,7 +49,7 @@ class ViewsTest(APITestCase):
             }
 
         url = '/api/error'
-        response = self.client.post(url, body, format='json')
+        response = self.client.post(url, body, format='json', secure=True)
 
         self.assertEqual(201, response.status_code)
 
@@ -75,7 +75,7 @@ class ViewsTest(APITestCase):
             }
 
         url = '/api/error'
-        response = self.client.post(url, body, format='json')
+        response = self.client.post(url, body, format='json', secure=True)
 
         self.assertEqual(201, response.status_code)
 
@@ -100,6 +100,6 @@ class ViewsTest(APITestCase):
             }
 
         url = '/api/error'
-        response = self.client.post(url, body, format='json')
+        response = self.client.post(url, body, format='json', secure=True)
 
         self.assertEqual(201, response.status_code)
