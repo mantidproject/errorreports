@@ -1,5 +1,5 @@
-Django==1.11.18
-djangorestframework==3.6.4
+Django==1.11.22
+djangorestframework==3.10.0
 django-filter==1.0.4
 Markdown
 gunicorn
