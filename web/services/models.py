@@ -67,7 +67,7 @@ def send_email_notification(sender, instance, signal, *args, **kwargs):
         instance.user.email != test_email else ''
     text_box = instance.textBox
 
-    if email:
+    if email or name:
         send_notification_email.delay(name, email, text_box)
 
 
