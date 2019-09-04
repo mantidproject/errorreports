@@ -146,6 +146,28 @@ if DEBUG:
             },
         },
     }
+else:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'logfile': {
+                'level': 'ERROR',
+                'class': 'logging.handlers.RotatingFileHandler',
+                'filename': '/var/log/django.log',
+                'maxBytes': 1024*1024*15,  # 15MB
+                'backupCount': 10,
+            },
+        },
+        'loggers': {
+            'django': {
+                'handlers': ['logfile'],
+                'level': 'ERROR',
+            },
+
+        },
+    }
+
 
 EMAIL_USE_TLS = True
 EMAIL_HOST = os.getenv('EMAIL_HOST', '')
