@@ -1,15 +1,17 @@
 from django.db import models
-from services.constants import input_box_max_length, free_text_max_length
-from django.core.files.storage import FileSystemStorage
 from django.conf import settings
+from django.core.files.storage import FileSystemStorage
 from django.core.validators import FileExtensionValidator
 from django.db.models import signals
-from celery_app.tasks import send_notification_email
 
-fs = FileSystemStorage(location=settings.MEDIA_ROOT)
-test_email = 'public_email'
-test_name = 'public_name'
-test_info = 'Something went wrong'
+from celery_app.tasks import send_notification_to_slack
+from services.constants import input_box_max_length, free_text_max_length
+
+# Implements saving recovery files to disk
+FILE_SYSTEM_STORE = FileSystemStorage(location=settings.MEDIA_ROOT)
+
+# Fixed constants used when system is tested
+TEST_EMAIL = 'public_email'
 
 
 class ErrorReport(models.Model):
@@ -26,23 +28,29 @@ class ErrorReport(models.Model):
     ParaView = models.CharField(max_length=16)  # ex: "3.98.1"
     mantidVersion = models.CharField(max_length=32)  # ex: "3.2.20141208.1820"
     # sha1 ex: "e9423bdb34b07213a69caa90913e40307c17c6cc"
-    mantidSha1 = models.CharField(
-        max_length=40, help_text="sha1 for specific mantid version")
+    mantidSha1 = models.CharField(max_length=40,
+                                  help_text="sha1 for specific mantid version")
     # ex: "Fedora 20 (Heisenbug)"
     osReadable = models.CharField(max_length=80, default="", blank=True)
     application = models.CharField(max_length=80, default="", blank=True)
 
     facility = models.CharField(max_length=32, default="", blank=True)
-    exitCode = models.CharField(max_length=32, default="",
-                                null=True, blank=True)
+    exitCode = models.CharField(max_length=32,
+                                default="",
+                                null=True,
+                                blank=True)
     upTime = models.CharField(max_length=32, default="")
-    user = models.ForeignKey('UserDetails', on_delete=models.SET_NULL,
-                             blank=True, null=True)
-    textBox = models.CharField(max_length=free_text_max_length, default="",
+    user = models.ForeignKey('UserDetails',
+                             on_delete=models.SET_NULL,
+                             blank=True,
+                             null=True)
+    textBox = models.CharField(max_length=free_text_max_length,
+                               default="",
                                null="True")
     recoveryFile = models.ForeignKey('RecoveryFiles',
                                      on_delete=models.SET_NULL,
-                                     blank=True, null=True)
+                                     blank=True,
+                                     null=True)
 
 
 class UserDetails(models.Model):
@@ -56,19 +64,32 @@ class RecoveryFiles(models.Model):
     fileHash = models.CharField(max_length=32,
                                 help_text="md5 name of recovery file",
                                 default='')
-    fileStore = models.FileField(storage=fs, null=True,
-                                 validators=[FileExtensionValidator(
-                                     allowed_extensions=['zip'])])
+    fileStore = models.FileField(
+        storage=FILE_SYSTEM_STORE,
+        null=True,
+        validators=[FileExtensionValidator(allowed_extensions=['zip'])])
 
 
-def send_email_notification(sender, instance, signal, *args, **kwargs):
-    name = instance.user.name if instance.user else ''
-    email = instance.user.email if instance.user and \
-        instance.user.email != test_email else ''
-    text_box = instance.textBox
+def notify_report_received(sender, instance, signal, *args, **kwargs):
+    """
+    Send a notification to the defined endpoint when a new error
+    report is received
+    :param sender: Unused
+    :param instance: The instance of ErrorReport that caused to notification
+    :param signal: Unused
+    :param args: Unused
+    :param kwargs: Unused
+    """
+    if instance.user is None:
+        return
 
-    if email or name:
-        send_notification_email.delay(name, email, text_box)
+    email = instance.user.email
+    if (not email) or email == TEST_EMAIL:
+        # Don't send a notification if there was not email provided as we can't
+        # actively do anything about it
+        return
+
+    send_notification_to_slack(instance.user.name, email, instance.textBox)
 
 
-signals.post_save.connect(send_email_notification, sender=ErrorReport)
+signals.post_save.connect(notify_report_received, sender=ErrorReport)
