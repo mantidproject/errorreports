@@ -59,7 +59,6 @@ MIDDLEWARE_CLASSES = (
 
 ROOT_URLCONF = 'urls'
 
-
 TEMPLATES = [
     {
         'BACKEND': 'django.template.backends.django.DjangoTemplates',
@@ -118,7 +117,6 @@ USE_L10N = True
 
 USE_TZ = True
 
-
 # Static files (CSS, JavaScript, Images)
 # https://docs.djangoproject.com/en/1.8/howto/static-files/
 
@@ -147,13 +145,16 @@ if DEBUG:
         },
     }
 
-EMAIL_USE_TLS = True
-EMAIL_HOST = os.getenv('EMAIL_HOST', '')
-EMAIL_HOST_USER = os.getenv('EMAIL_HOST_USER', '')
-EMAIL_HOST_PASSWORD = os.getenv('EMAIL_HOST_PASSWORD', '')
-EMAIL_PORT = os.getenv('EMAIL_PORT', '')
-EMAIL_TO_ADDRESS = os.getenv('EMAIL_TO_ADDRESS', '')
-EMAIL_FROM_ADDRESS = os.getenv('EMAIL_FROM_ADDRESS', '')
+# Slack notifications can be configured by environment variables
+# webhook is required, everything else is optional
+SLACK_WEBHOOK_URL = os.getenv('SLACK_WEBHOOK_URL', None)
+SLACK_ERROR_REPORTS_CHANNEL = os.getenv('SLACK_ERROR_REPORTS_CHANNEL',
+                                        '#error-reports')
+SLACK_ERROR_REPORTS_USERNAME = os.getenv('SLACK_ERROR_REPORTS_USERNAME',
+                                         'Error Reporter')
+SLACK_ERROR_REPORTS_EMOJI = os.getenv('SLACK_ERROR_REPORTS_EMOJI', ':skull:')
+SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT = os.getenv(
+    'SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT', 'Not provided')
 
 CELERY_BROKER_URL = 'redis://redis:6379'
 CELERY_RESULT_BACKEND = 'redis://redis:6379'
