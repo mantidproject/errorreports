@@ -1,6 +1,6 @@
-Django==1.11.27
-djangorestframework==3.10.0
-django-filter==1.0.4
+Django==2.2.7
+djangorestframework==3.10.3
+django-filter==2.2.0
 Markdown
 gunicorn
 gevent
