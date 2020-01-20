@@ -153,6 +153,7 @@ class ErrorViewSet(viewsets.ModelViewSet):
         upTime = report["upTime"]
         exitCode = report["exitCode"]
         textBox = report["textBox"] if "textBox" in report else ""
+        stacktrace = report["stacktrace"] if "stacktrace" in report else ""
 
         if "name" in report and "email" in report:
             name = report["name"]
@@ -195,7 +196,8 @@ class ErrorViewSet(viewsets.ModelViewSet):
                                               exitCode=exitCode,
                                               user=user,
                                               textBox=textBox,
-                                              recoveryFile=file_object)
+                                              recoveryFile=file_object,
+                                              stacktrace = stacktrace)
         if not created:
             obj.save()
 

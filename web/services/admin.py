@@ -18,7 +18,8 @@ class ErrorAdmin(admin.ModelAdmin):
                     'upTime',
                     'textBox',
                     'get_user_email',
-                    'get_recoveryFile')
+                    'get_recoveryFile',
+                    'stacktrace')
 
     def get_user_email(self, obj):
         return obj.user.email if obj.user else ''

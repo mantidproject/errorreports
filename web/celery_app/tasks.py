@@ -5,7 +5,7 @@ from celery import shared_task
 
 
 @shared_task
-def send_notification_to_slack(name, email, additional_text):
+def send_notification_to_slack(name, email, additional_text, stacktrace):
     """Sends a notification about a new error report to the slack
     channel defined in the settings
 
@@ -22,10 +22,11 @@ def send_notification_to_slack(name, email, additional_text):
         Email: {}
         Additional text:
         {}
+        Stack Trace:{}
     """.format(
         name if name else settings.SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT, email,
         additional_text
-        if additional_text else settings.SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT)
+        if additional_text else settings.SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT,stacktrace if stacktrace else settings.SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT )
     requests.post(slack_webhook_url,
                   json={
                       'channel': settings.SLACK_ERROR_REPORTS_CHANNEL,

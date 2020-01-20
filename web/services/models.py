@@ -52,6 +52,7 @@ class ErrorReport(models.Model):
                                      blank=True,
                                      null=True)
 
+    stacktrace = models.CharField(max_length=2000, default ="")
 
 class UserDetails(models.Model):
     name = models.CharField(max_length=input_box_max_length,
@@ -89,7 +90,7 @@ def notify_report_received(sender, instance, signal, *args, **kwargs):
         # actively do anything about it
         return
 
-    send_notification_to_slack(instance.user.name, email, instance.textBox)
+    send_notification_to_slack(instance.user.name, email, instance.textBox, instance.stacktrace)
 
 
 signals.post_save.connect(notify_report_received, sender=ErrorReport)
