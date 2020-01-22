@@ -3,17 +3,19 @@ from services.constants import input_box_max_length
 from rest_framework import response, viewsets, views
 from rest_framework.decorators import api_view
 from rest_framework.parsers import FileUploadParser, MultiPartParser
-from rest_framework.response import Response
-from rest_framework.permissions import (IsAuthenticated,
-                                        IsAdminUser, BasePermission)
-from rest_framework import status
-from django.conf import settings
-from django.core.files import File
+#from rest_framework.response import Response
+from rest_framework.permissions import (BasePermission#,
+                                        #IsAuthenticated,
+                                        #IsAdminUser 
+                                        )
+#from rest_framework import status
+#from django.conf import settings
+#from django.core.files import File
 from services.serializer import ErrorSerializer
 import django_filters
 from django.http import HttpResponse
 import hashlib
-import os
+#import os
 import pytz
 from django.utils.dateparse import parse_datetime
 
@@ -57,13 +59,6 @@ class ErrorFilter(django_filters.FilterSet):
         model = ErrorReport
         fields = '__all__'
         order_by = ['-dateTime']
-
-
-class RecoveryFileUploadView(views.APIView):
-    parser_classes = (MultiPartParser, FileUploadParser)
-
-    def get(self, request):
-        return HttpResponse("We no longer accept recovery files.")
 
 
 class IsAuthenticatedOrWriteOnly(BasePermission):
@@ -155,6 +150,6 @@ class ErrorViewSet(viewsets.ModelViewSet):
 
 
 @api_view(('GET',))
-def api_root(request, format=None):
+def api_root(request,format=None):
     return response.Response({
     })

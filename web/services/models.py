@@ -1,7 +1,6 @@
 from django.db import models
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-from django.core.validators import FileExtensionValidator
 from django.db.models import signals
 
 from celery_app.tasks import send_notification_to_slack
@@ -47,8 +46,8 @@ class ErrorReport(models.Model):
     textBox = models.CharField(max_length=free_text_max_length,
                                default="",
                                null="True")
-
     stacktrace = models.CharField(max_length=2000, default ="")
+
 
 class UserDetails(models.Model):
     name = models.CharField(max_length=input_box_max_length,
@@ -76,7 +75,14 @@ def notify_report_received(sender, instance, signal, *args, **kwargs):
         # actively do anything about it
         return
 
-    send_notification_to_slack(instance.user.name, email, instance.textBox, instance.stacktrace, instance.application, instance.mantidVersion, instance.osReadable)
+    send_notification_to_slack(instance.user.name,
+                               email,
+                               instance.textBox,
+                               instance.stacktrace,
+                               instance.application,
+                               instance.mantidVersion,
+                               instance.osReadable
+                               )
 
 
 signals.post_save.connect(notify_report_received, sender=ErrorReport)

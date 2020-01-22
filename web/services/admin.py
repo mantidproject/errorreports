@@ -1,8 +1,6 @@
 from django.contrib import admin
-from django.utils.html import format_html
 # Register your models here.
 from services.models import ErrorReport, UserDetails
-from django.conf import settings
 
 
 class ErrorAdmin(admin.ModelAdmin):
@@ -24,6 +22,7 @@ class ErrorAdmin(admin.ModelAdmin):
         return obj.user.email if obj.user else ''
     get_user_email.admin_order_field = 'user__email'
     get_user_email.short_description = 'User provided email'
+
 
 class UserAdmin(admin.ModelAdmin):
     list_display = ('name',
