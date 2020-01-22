@@ -152,7 +152,7 @@ SLACK_ERROR_REPORTS_CHANNEL = os.getenv('SLACK_ERROR_REPORTS_CHANNEL',
                                         '#error-reports')
 SLACK_ERROR_REPORTS_USERNAME = os.getenv('SLACK_ERROR_REPORTS_USERNAME',
                                          'Error Reporter')
-SLACK_ERROR_REPORTS_EMOJI = os.getenv('SLACK_ERROR_REPORTS_EMOJI', ':skull:')
+SLACK_ERROR_REPORTS_EMOJI = os.getenv('SLACK_ERROR_REPORTS_EMOJI', ':sadmantid:')
 SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT = os.getenv(
     'SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT', 'Not provided')
 
