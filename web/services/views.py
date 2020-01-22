@@ -1,21 +1,12 @@
 from services.models import ErrorReport, UserDetails
 from services.constants import input_box_max_length
-from rest_framework import response, viewsets, views
+from rest_framework import response, viewsets
 from rest_framework.decorators import api_view
-from rest_framework.parsers import FileUploadParser, MultiPartParser
-#from rest_framework.response import Response
-from rest_framework.permissions import (BasePermission#,
-                                        #IsAuthenticated,
-                                        #IsAdminUser 
-                                        )
-#from rest_framework import status
-#from django.conf import settings
-#from django.core.files import File
+from rest_framework.permissions import BasePermission
 from services.serializer import ErrorSerializer
 import django_filters
 from django.http import HttpResponse
 import hashlib
-#import os
 import pytz
 from django.utils.dateparse import parse_datetime
 
@@ -144,12 +135,12 @@ class ErrorViewSet(viewsets.ModelViewSet):
                                               exitCode=exitCode,
                                               user=user,
                                               textBox=textBox,
-                                              stacktrace = stacktrace)
+                                              stacktrace=stacktrace)
         if not created:
             obj.save()
 
 
 @api_view(('GET',))
-def api_root(request,format=None):
+def api_root(request, format=None):
     return response.Response({
     })

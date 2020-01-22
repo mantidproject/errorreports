@@ -46,7 +46,7 @@ class ErrorReport(models.Model):
     textBox = models.CharField(max_length=free_text_max_length,
                                default="",
                                null="True")
-    stacktrace = models.CharField(max_length=2000, default ="")
+    stacktrace = models.CharField(max_length=2000, default="")
 
 
 class UserDetails(models.Model):

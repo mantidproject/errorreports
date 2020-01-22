@@ -43,7 +43,7 @@ def send_notification_to_slack(name,
         version if version
         else settings.SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT,
         os if os
-        else settings.SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT )
+        else settings.SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT)
     requests.post(slack_webhook_url,
                   json={
                       'channel': settings.SLACK_ERROR_REPORTS_CHANNEL,
