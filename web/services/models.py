@@ -2,7 +2,6 @@ from django.db import models
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
 from django.db.models import signals
-
 from celery_app.tasks import send_notification_to_slack
 from services.constants import input_box_max_length, free_text_max_length
 
@@ -11,7 +10,6 @@ FILE_SYSTEM_STORE = FileSystemStorage(location=settings.MEDIA_ROOT)
 
 # Fixed constants used when system is tested
 TEST_EMAIL = 'public_email'
-
 
 class ErrorReport(models.Model):
     # md5 ex: "c5a9b601408709f47417bcba3571262b"
