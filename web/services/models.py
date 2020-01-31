@@ -11,6 +11,7 @@ FILE_SYSTEM_STORE = FileSystemStorage(location=settings.MEDIA_ROOT)
 # Fixed constants used when system is tested
 TEST_EMAIL = 'public_email'
 
+
 class ErrorReport(models.Model):
     # md5 ex: "c5a9b601408709f47417bcba3571262b"
     uid = models.CharField(max_length=32, help_text="md5 version of username")

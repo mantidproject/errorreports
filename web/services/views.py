@@ -2,7 +2,6 @@ from services.models import ErrorReport, UserDetails
 from services.constants import input_box_max_length
 from rest_framework import response, viewsets, views
 from rest_framework.decorators import api_view
-from rest_framework.parsers import FileUploadParser, MultiPartParser
 from rest_framework.response import Response
 from rest_framework import status
 from rest_framework.permissions import BasePermission
@@ -10,7 +9,6 @@ from services.serializer import ErrorSerializer
 import django_filters
 from django.http import HttpResponse
 import hashlib
-import os
 import pytz
 from django.utils.dateparse import parse_datetime
 
@@ -55,13 +53,15 @@ class ErrorFilter(django_filters.FilterSet):
         fields = '__all__'
         order_by = ['-dateTime']
 
+
 class RecoveryFileUploadView(views.APIView):
 
     def get(self, request):
         return HttpResponse('Error Reports no longer accept Recovery Files.')
 
     def post(self, request):
-        return Response('Error Reports no longer accept Recovery Files.', status.HTTP_201_CREATED)
+        return Response('Error Reports no longer accept Recovery Files.',
+                        status.HTTP_201_CREATED)
 
 
 class IsAuthenticatedOrWriteOnly(BasePermission):
