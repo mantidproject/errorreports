@@ -5,7 +5,14 @@ from celery import shared_task
 
 
 @shared_task
-def send_notification_to_slack(name, email, additional_text):
+def send_notification_to_slack(name,
+                               email,
+                               additional_text,
+                               stacktrace,
+                               application,
+                               version,
+                               os
+                               ):
     """Sends a notification about a new error report to the slack
     channel defined in the settings
 
@@ -17,15 +24,26 @@ def send_notification_to_slack(name, email, additional_text):
     slack_webhook_url = settings.SLACK_WEBHOOK_URL
     if slack_webhook_url is None:
         return
-    text = """An error report was received. Details:
-        Name: {}
-        Email: {}
+    text = """Name: {}  Email: {}
         Additional text:
         {}
+        Stack Trace:
+        {}
+        Using: {} {} on {}
     """.format(
-        name if name else settings.SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT, email,
-        additional_text
-        if additional_text else settings.SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT)
+        name if name
+        else settings.SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT,
+        email,
+        additional_text if additional_text
+        else settings.SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT,
+        stacktrace if stacktrace
+        else settings.SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT,
+        application if application
+        else settings.SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT,
+        version if version
+        else settings.SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT,
+        os if os
+        else settings.SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT)
     requests.post(slack_webhook_url,
                   json={
                       'channel': settings.SLACK_ERROR_REPORTS_CHANNEL,

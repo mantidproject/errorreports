@@ -1,9 +1,7 @@
 from django.db import models
 from django.conf import settings
 from django.core.files.storage import FileSystemStorage
-from django.core.validators import FileExtensionValidator
 from django.db.models import signals
-
 from celery_app.tasks import send_notification_to_slack
 from services.constants import input_box_max_length, free_text_max_length
 
@@ -47,10 +45,7 @@ class ErrorReport(models.Model):
     textBox = models.CharField(max_length=free_text_max_length,
                                default="",
                                null="True")
-    recoveryFile = models.ForeignKey('RecoveryFiles',
-                                     on_delete=models.SET_NULL,
-                                     blank=True,
-                                     null=True)
+    stacktrace = models.CharField(max_length=2000, default="")
 
 
 class UserDetails(models.Model):
@@ -58,16 +53,6 @@ class UserDetails(models.Model):
                             help_text="user provided name")
     email = models.CharField(max_length=input_box_max_length,
                              help_text="user provided email")
-
-
-class RecoveryFiles(models.Model):
-    fileHash = models.CharField(max_length=32,
-                                help_text="md5 name of recovery file",
-                                default='')
-    fileStore = models.FileField(
-        storage=FILE_SYSTEM_STORE,
-        null=True,
-        validators=[FileExtensionValidator(allowed_extensions=['zip'])])
 
 
 def notify_report_received(sender, instance, signal, *args, **kwargs):
@@ -89,7 +74,14 @@ def notify_report_received(sender, instance, signal, *args, **kwargs):
         # actively do anything about it
         return
 
-    send_notification_to_slack(instance.user.name, email, instance.textBox)
+    send_notification_to_slack(instance.user.name,
+                               email,
+                               instance.textBox,
+                               instance.stacktrace,
+                               instance.application,
+                               instance.mantidVersion,
+                               instance.osReadable
+                               )
 
 
 signals.post_save.connect(notify_report_received, sender=ErrorReport)
