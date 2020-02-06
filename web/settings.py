@@ -144,6 +144,28 @@ if DEBUG:
             },
         },
     }
+else:
+    LOGGING = {
+        'version': 1,
+        'disable_existing_loggers': False,
+        'handlers': {
+            'logfile': {
+                'level': 'ERROR',
+                'class': 'logging.handlers.RotatingFileHandler',
+                'filename': '/var/log/django.log',
+                'maxBytes': 1024*1024*15,  # 15MB
+                'backupCount': 10,
+            },
+        },
+        'loggers': {
+            'django': {
+                'handlers': ['logfile'],
+                'level': 'ERROR',
+            },
+
+        },
+    }
+
 
 # Slack notifications can be configured by environment variables
 # webhook is required, everything else is optional
