@@ -5,6 +5,4 @@ Markdown
 gunicorn
 gevent
 psycopg2-binary
-celery==4.2.1
-redis==3.2.1
-requests==2.22.0
+requests==2.23.0

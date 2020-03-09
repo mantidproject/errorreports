@@ -135,12 +135,18 @@ if DEBUG:
             'console': {
                 'class': 'logging.StreamHandler',
             },
+            'slack':{
+                'level': 'ERROR',
+                'class': 'handlers.SlackHandler',
+            },
         },
         'loggers': {
             'django': {
-                'handlers': ['console'],
+                'handlers': ['console', 'slack'],
                 'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
             },
+            
+            
         },
     }
 else:
@@ -155,10 +161,14 @@ else:
                 'maxBytes': 1024*1024*15,  # 15MB
                 'backupCount': 10,
             },
+            'slack':{
+                'level': 'ERROR',
+                'class': 'handlers.SlackHandler',
+            },
         },
         'loggers': {
             'django': {
-                'handlers': ['logfile'],
+                'handlers': ['logfile', 'slack'],
                 'level': 'ERROR',
             },
 
@@ -171,15 +181,13 @@ else:
 SLACK_WEBHOOK_URL = os.getenv('SLACK_WEBHOOK_URL', None)
 SLACK_ERROR_REPORTS_CHANNEL = os.getenv('SLACK_ERROR_REPORTS_CHANNEL',
                                         '#error-reports')
+SLACK_ERROR_REPORTS_CHANNEL = os.getenv('SLACK_ERROR_REPORTS_CHANNEL',
+                                        '#error-reports')
+SLACK_SERVER_ERRORS_CHANNEL = os.getenv('SLACK_SERVER_ERRORS_CHANNEL',
+                                        '#linode-app-errors')
 SLACK_ERROR_REPORTS_USERNAME = os.getenv('SLACK_ERROR_REPORTS_USERNAME',
                                          'Error Reporter')
 SLACK_ERROR_REPORTS_EMOJI = os.getenv('SLACK_ERROR_REPORTS_EMOJI',
                                       ':sadmantid:')
 SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT = os.getenv(
     'SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT', 'Not provided')
-
-CELERY_BROKER_URL = 'redis://redis:6379'
-CELERY_RESULT_BACKEND = 'redis://redis:6379'
-CELERY_ACCEPT_CONTENT = ['application/json']
-CELERY_TASK_SERIALIZER = 'json'
-CELERY_RESULT_SERIALIZER = 'json'

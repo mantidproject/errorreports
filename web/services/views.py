@@ -11,8 +11,9 @@ from django.http import HttpResponse
 import hashlib
 import pytz
 from django.utils.dateparse import parse_datetime
+import logging
 
-
+logger = logging.getLogger('django')
 RECOVERY_FILE_SIZE_MAX_BYTES = 10*1024*1024
 
 
@@ -79,6 +80,62 @@ class IsAuthenticatedOrWriteOnly(BasePermission):
         )
 
 
+def saveErrorReport(report):
+    osReadable = report["osReadable"]
+    application = report["application"]
+    uid = report["uid"]
+    host = report["host"]
+    dateTime = parse_datetime(report["dateTime"])
+    if dateTime.tzinfo is None:
+        dateTime = pytz.timezone("UTC").localize(dateTime)
+    osName = report["osName"]
+    osArch = report["osArch"]
+    osVersion = report["osVersion"]
+    ParaView = report["ParaView"]
+    mantidVersion = report["mantidVersion"]
+    mantidSha1 = report["mantidSha1"]
+    facility = report["facility"]
+    upTime = report["upTime"]
+    exitCode = report["exitCode"]
+    textBox = report["textBox"] if "textBox" in report else ""
+    stacktrace = report["stacktrace"] if "stacktrace" in report else ""
+
+    if "name" in report and "email" in report:
+        name = report["name"]
+        name = (name[:input_box_max_length - 2] + '..') if \
+            len(name) > input_box_max_length else name
+        email = report["email"]
+        email = (email[:input_box_max_length - 2] + '..') if \
+            len(email) > input_box_max_length else email
+
+        user, created = UserDetails.objects.get_or_create(name=name,
+                                                            email=email)
+        user.save()
+    else:
+        user = None
+
+    obj, created = \
+        ErrorReport.objects.get_or_create(osReadable=osReadable,
+                                            application=application,
+                                            uid=uid, host=host,
+                                            dateTime=dateTime,
+                                            osName=osName,
+                                            osArch=osArch,
+                                            osVersion=osVersion,
+                                            ParaView=ParaView,
+                                            mantidVersion=mantidVersion,
+                                            mantidSha1=mantidSha1,
+                                            facility=facility,
+                                            upTime=upTime,
+                                            exitCode=exitCode,
+                                            user=user,
+                                            textBox=textBox,
+                                            stacktrace=stacktrace)
+    if not created:
+        obj.save()
+    
+
+
 class ErrorViewSet(viewsets.ModelViewSet):
     """All errors registered in the system. Valid filter parameters are:
     'datemin' and 'datemax'.
@@ -91,65 +148,11 @@ class ErrorViewSet(viewsets.ModelViewSet):
     def create(self, request):
         if request.method == 'POST':
             post_data = request.data
-            self.saveErrorReport(post_data)
+            saveErrorReport(post_data)
             return HttpResponse(status=201)
         else:
             return HttpResponse("Please supply feature error "
                                 "report data as POST.")
-
-    def saveErrorReport(self, report):
-        osReadable = report["osReadable"]
-        application = report["application"]
-        uid = report["uid"]
-        host = report["host"]
-        dateTime = parse_datetime(report["dateTime"])
-        if dateTime.tzinfo is None:
-            dateTime = pytz.timezone("UTC").localize(dateTime)
-        osName = report["osName"]
-        osArch = report["osArch"]
-        osVersion = report["osVersion"]
-        ParaView = report["ParaView"]
-        mantidVersion = report["mantidVersion"]
-        mantidSha1 = report["mantidSha1"]
-        facility = report["facility"]
-        upTime = report["upTime"]
-        exitCode = report["exitCode"]
-        textBox = report["textBox"] if "textBox" in report else ""
-        stacktrace = report["stacktrace"] if "stacktrace" in report else ""
-
-        if "name" in report and "email" in report:
-            name = report["name"]
-            name = (name[:input_box_max_length - 2] + '..') if \
-                len(name) > input_box_max_length else name
-            email = report["email"]
-            email = (email[:input_box_max_length - 2] + '..') if \
-                len(email) > input_box_max_length else email
-
-            user, created = UserDetails.objects.get_or_create(name=name,
-                                                              email=email)
-            user.save()
-        else:
-            user = None
-
-        obj, created = \
-            ErrorReport.objects.get_or_create(osReadable=osReadable,
-                                              application=application,
-                                              uid=uid, host=host,
-                                              dateTime=dateTime,
-                                              osName=osName,
-                                              osArch=osArch,
-                                              osVersion=osVersion,
-                                              ParaView=ParaView,
-                                              mantidVersion=mantidVersion,
-                                              mantidSha1=mantidSha1,
-                                              facility=facility,
-                                              upTime=upTime,
-                                              exitCode=exitCode,
-                                              user=user,
-                                              textBox=textBox,
-                                              stacktrace=stacktrace)
-        if not created:
-            obj.save()
 
 
 @api_view(('GET',))
