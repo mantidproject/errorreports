@@ -69,7 +69,7 @@ def notify_report_received(sender, instance, signal, *args, **kwargs):
         return
 
     email = instance.user.email
-    if (not email) or email == TEST_EMAIL:
+    if email == TEST_EMAIL:
         # Don't send a notification if there was not email provided as we can't
         # actively do anything about it
         return
@@ -81,14 +81,5 @@ def notify_report_received(sender, instance, signal, *args, **kwargs):
                                instance.mantidVersion,
                                instance.osReadable))
     notification_thread.start()
-    # send_notification_to_slack(instance.user.name,
-    #                            email,
-    #                            instance.textBox,
-    #                            instance.stacktrace,
-    #                            instance.application,
-    #                            instance.mantidVersion,
-    #                            instance.osReadable
-    #                            )
-
 
 signals.post_save.connect(notify_report_received, sender=ErrorReport)

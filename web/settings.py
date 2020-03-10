@@ -181,8 +181,6 @@ else:
 SLACK_WEBHOOK_URL = os.getenv('SLACK_WEBHOOK_URL', None)
 SLACK_ERROR_REPORTS_CHANNEL = os.getenv('SLACK_ERROR_REPORTS_CHANNEL',
                                         '#error-reports')
-SLACK_ERROR_REPORTS_CHANNEL = os.getenv('SLACK_ERROR_REPORTS_CHANNEL',
-                                        '#error-reports')
 SLACK_SERVER_ERRORS_CHANNEL = os.getenv('SLACK_SERVER_ERRORS_CHANNEL',
                                         '#linode-app-errors')
 SLACK_ERROR_REPORTS_USERNAME = os.getenv('SLACK_ERROR_REPORTS_USERNAME',
