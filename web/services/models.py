@@ -73,13 +73,15 @@ def notify_report_received(sender, instance, signal, *args, **kwargs):
         # Don't send a notification if there was not email provided as we can't
         # actively do anything about it
         return
-    notification_thread = threading.Thread(target=send_notification_to_slack, args=(instance.user.name,
-                               email,
-                               instance.textBox,
-                               instance.stacktrace,
-                               instance.application,
-                               instance.mantidVersion,
-                               instance.osReadable))
+    notification_thread = threading.Thread(
+        target=send_notification_to_slack, args=(instance.user.name,
+                                                 email,
+                                                 instance.textBox,
+                                                 instance.stacktrace,
+                                                 instance.application,
+                                                 instance.mantidVersion,
+                                                 instance.osReadable))
     notification_thread.start()
+
 
 signals.post_save.connect(notify_report_received, sender=ErrorReport)

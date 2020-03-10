@@ -135,7 +135,7 @@ if DEBUG:
             'console': {
                 'class': 'logging.StreamHandler',
             },
-            'slack':{
+            'slack': {
                 'level': 'ERROR',
                 'class': 'handlers.SlackHandler',
             },
@@ -145,8 +145,8 @@ if DEBUG:
                 'handlers': ['console', 'slack'],
                 'level': os.getenv('DJANGO_LOG_LEVEL', 'DEBUG'),
             },
-            
-            
+
+
         },
     }
 else:
@@ -161,7 +161,7 @@ else:
                 'maxBytes': 1024*1024*15,  # 15MB
                 'backupCount': 10,
             },
-            'slack':{
+            'slack': {
                 'level': 'ERROR',
                 'class': 'handlers.SlackHandler',
             },

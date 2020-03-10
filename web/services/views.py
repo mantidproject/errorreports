@@ -109,31 +109,30 @@ def saveErrorReport(report):
             len(email) > input_box_max_length else email
 
         user, created = UserDetails.objects.get_or_create(name=name,
-                                                            email=email)
+                                                          email=email)
         user.save()
     else:
         user = None
 
     obj, created = \
         ErrorReport.objects.get_or_create(osReadable=osReadable,
-                                            application=application,
-                                            uid=uid, host=host,
-                                            dateTime=dateTime,
-                                            osName=osName,
-                                            osArch=osArch,
-                                            osVersion=osVersion,
-                                            ParaView=ParaView,
-                                            mantidVersion=mantidVersion,
-                                            mantidSha1=mantidSha1,
-                                            facility=facility,
-                                            upTime=upTime,
-                                            exitCode=exitCode,
-                                            user=user,
-                                            textBox=textBox,
-                                            stacktrace=stacktrace)
+                                          application=application,
+                                          uid=uid, host=host,
+                                          dateTime=dateTime,
+                                          osName=osName,
+                                          osArch=osArch,
+                                          osVersion=osVersion,
+                                          ParaView=ParaView,
+                                          mantidVersion=mantidVersion,
+                                          mantidSha1=mantidSha1,
+                                          facility=facility,
+                                          upTime=upTime,
+                                          exitCode=exitCode,
+                                          user=user,
+                                          textBox=textBox,
+                                          stacktrace=stacktrace)
     if not created:
         obj.save()
-    
 
 
 class ErrorViewSet(viewsets.ModelViewSet):
