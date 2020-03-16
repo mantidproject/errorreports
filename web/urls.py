@@ -1,15 +1,16 @@
-from django.conf.urls import include, url
+from django.conf.urls import include
 from django.contrib import admin
 from django.views.generic.base import RedirectView
+from django.urls import path
 
 admin.autodiscover()
 
 urlpatterns = [
     # Examples:
-    url(r'^admin/', include(admin.site.urls)),
-    url(r'^api/', include('services.urls')),
+    path('admin/', admin.site.urls),
+    path('api/', include('services.urls')),
     # should be in services/urls.py
-    url(r'^api-auth/', include('rest_framework.urls',
-                               namespace='rest_framework')),
-    url(r'^$', RedirectView.as_view(url='/api/', permanent=True))
+    path('api-auth/', include('rest_framework.urls',
+                              namespace='rest_framework')),
+    path('', RedirectView.as_view(url='/api/', permanent=True))
 ]

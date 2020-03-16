@@ -5,18 +5,18 @@ from services.models import ErrorReport, UserDetails
 
 class ErrorAdmin(admin.ModelAdmin):
     list_display = (
-                    'dateTime',
-                    'osReadable',
-                    'ParaView',
-                    'mantidVersion',
-                    'mantidSha1',
-                    'application',
-                    'facility',
-                    'exitCode',
-                    'upTime',
-                    'textBox',
-                    'get_user_email',
-                    'stacktrace')
+        'dateTime',
+        'osReadable',
+        'ParaView',
+        'mantidVersion',
+        'mantidSha1',
+        'application',
+        'facility',
+        'exitCode',
+        'upTime',
+        'textBox',
+        'get_user_email',
+        'stacktrace')
 
     def get_user_email(self, obj):
         return obj.user.email if obj.user else ''
