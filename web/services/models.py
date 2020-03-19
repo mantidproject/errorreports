@@ -72,10 +72,10 @@ def notify_report_received(sender, instance, signal, *args, **kwargs):
     # Don't send a slack notification if there was not
     # a useful email, stacktrace or text provided
     # as we can't actively do anything about it
-    if (email in TEST_VALUES 
+    if (email in TEST_VALUES
         and stacktrace in TEST_VALUES
         and textBox in TEST_VALUES):
-        return
+       return
 
     notification_thread = threading.Thread(
         target=send_notification_to_slack, args=(instance.user.name,
