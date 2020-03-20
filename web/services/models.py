@@ -65,7 +65,9 @@ def notify_report_received(sender, instance, signal, *args, **kwargs):
     :param args: Unused
     :param kwargs: Unused
     """
-
+    if instance.user is None:
+        return
+        
     email = instance.user.email
     textBox = instance.textBox
     stacktrace = instance.stacktrace
