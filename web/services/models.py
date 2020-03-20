@@ -9,7 +9,7 @@ import threading
 FILE_SYSTEM_STORE = FileSystemStorage(location=settings.MEDIA_ROOT)
 
 # Fixed constants used when system is tested
-TEST_EMAIL = 'public_email'
+TEST_VALUES = ('public_email', 'Not provided', '', 'Something went wrong')
 
 
 class ErrorReport(models.Model):
@@ -65,16 +65,32 @@ def notify_report_received(sender, instance, signal, *args, **kwargs):
     :param args: Unused
     :param kwargs: Unused
     """
+    textBox = instance.textBox
+    stacktrace = instance.stacktrace
+
     if instance.user is None:
+
+        if ((stacktrace in TEST_VALUES
+             and textBox in TEST_VALUES)):
+            return
+        else:
+            name = "Not provided"
+            email = "Not provided"
+
+    else:
+        name = instance.user.name
+        email = instance.user.email
+
+    # Don't send a slack notification if there was not
+    # a useful email, stacktrace or text provided
+    # as we can't actively do anything about it
+    if ((email in TEST_VALUES
+         and stacktrace in TEST_VALUES
+         and textBox in TEST_VALUES)):
         return
 
-    email = instance.user.email
-    if email == TEST_EMAIL:
-        # Don't send a notification if there was not email provided as we can't
-        # actively do anything about it
-        return
     notification_thread = threading.Thread(
-        target=send_notification_to_slack, args=(instance.user.name,
+        target=send_notification_to_slack, args=(name,
                                                  email,
                                                  instance.textBox,
                                                  instance.stacktrace,
