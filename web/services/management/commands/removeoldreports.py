@@ -27,5 +27,3 @@ class Command(BaseCommand):
 
         for report in reports:
             report.delete()
-
-
