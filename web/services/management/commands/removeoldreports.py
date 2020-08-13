@@ -3,7 +3,7 @@ from services.models import ErrorReport
 from datetime import timedelta
 from django.utils import timezone
 
-DEFAULT_RECOVERY_FILE_AGE_DAYS = 30
+DEFAULT_RECOVERY_FILE_AGE_DAYS = 90
 
 
 class Command(BaseCommand):
@@ -20,13 +20,12 @@ class Command(BaseCommand):
 
     def handle(self, *args, **options):
         if options['all']:
-            reports = ErrorReport.objects.filter(
-                recoveryFile__isnull=False)
+            reports = ErrorReport.objects.filter()
         else:
             reports = ErrorReport.objects.filter(
-                dateTime__lte=timezone.now()-timedelta(days=options['days']))\
-                .filter(recoveryFile__isnull=False)
+                dateTime__lte=timezone.now()-timedelta(days=options['days']))
 
         for report in reports:
-            report.recoveryFile.fileStore.delete(save=False)
-            report.recoveryFile.delete()
+            report.delete()
+
+
