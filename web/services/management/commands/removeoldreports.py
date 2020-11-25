@@ -7,8 +7,9 @@ DEFAULT_RECOVERY_FILE_AGE_DAYS = 90
 
 
 class Command(BaseCommand):
-    help = 'Deletes all ErrorReports (over 90 days old by default),\
-        and removes UserDetails not related to any active reports. '
+    help = 'Removes identifiable information from ErrorReports (over 90 days \
+            old by default), and removes UserDetails \
+            not related to any active reports. '
 
     def add_arguments(self, parser):
         parser.add_argument('--all',
@@ -35,9 +36,12 @@ class Command(BaseCommand):
             reports = ErrorReport.objects.filter(
                 dateTime__lte=timezone.now()-timedelta(days=options['days']))
 
-        for report in reports:
-            # Delete chosen reports
-            report.delete()
+        # Delete identifiable parts of chosen reports
+        reports.update(uid="")
+        reports.update(host="")
+        reports.update(user_id="")
+        reports.update(textBox="")
+        reports.update(stacktrace="")
 
         """Get UserDetails which are not tied to any surviving ErrorReports"""
 
