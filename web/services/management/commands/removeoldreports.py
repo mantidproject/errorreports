@@ -1,5 +1,5 @@
 from django.core.management.base import BaseCommand
-from services.models import ErrorReport, UserDetails
+from services.models import ErrorReport
 from datetime import timedelta
 from django.utils import timezone
 
@@ -36,51 +36,5 @@ class Command(BaseCommand):
             reports = ErrorReport.objects.filter(
                 dateTime__lte=timezone.now()-timedelta(days=options['days']))
 
-        # Delete identifiable parts of chosen reports
-        reports.update(uid="")
-        reports.update(host="")
-        reports.update(user_id="")
-        reports.update(textBox="")
-        reports.update(stacktrace="")
-
-        """Get UserDetails which are not tied to any surviving ErrorReports"""
-
-        users_with_surviving_reports = ErrorReport.objects.exclude(
-                dateTime__lte=timezone.now()-timedelta(days=options['days'])
-                ).values_list('user')
-
-        active_users = []  # User IDs with surviving reports
-        all_user = UserDetails.objects.all()  # All UserDetails objects
-        all_user_list = []  # All User IDs
-        empty_users = []  # User IDs with NO surviving reports
-        empty_users_objects = []  # UserDetails objects
-        #                           with NO surviving reports
-
-        # Get a list of User IDs for all active/surviving reports
-        for i in range(len(users_with_surviving_reports)):
-            (Active_User_ID,) = users_with_surviving_reports[i]
-            if Active_User_ID is not None:
-                active_users.append(Active_User_ID)
-
-        # Get lists of User Objects and IDs,
-        # with NO active/surviving error reports
-        for index in range(len(all_user)):
-            (User_ID,) = all_user.values_list('id')[index]
-            all_user_list.append(User_ID)
-            if all_user_list[index] not in active_users:
-                empty_users_objects.append(all_user[index])
-                empty_users.append(User_ID)
-
-        # Print User IDs for deleting
-        print("Active Users:")
-        print(active_users)
-        print("All Users:")
-        print(all_user_list)
-        print("Deleting Details of Empty Users:")
-        print(empty_users)
-        print('Deleting UserDetails Objects:')
-        print(empty_users_objects)
-
-        for user_details in empty_users_objects:
-            # Delete UserDetails with no reports
-            user_details.delete()
+        # empties reports and removes orphaned user details
+        ErrorReport.removePIIData(reports)

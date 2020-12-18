@@ -50,14 +50,14 @@ The values of each key are irrelevant for the test setup. For production they ne
 Now start the services with:
 
 ```
-sudo bin/boot.sh
+$ bin/boot.sh
 ```
 and the site will be viewable at `http://localhost:8082/admin`.
 
 To stop the services execute:
 
 ```
-sudo bin/shutdown.sh
+$ bin/shutdown.sh
 ```
 which ensures that the webdata volume is cleaned up.
 

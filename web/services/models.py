@@ -47,12 +47,30 @@ class ErrorReport(models.Model):
                                null="True")
     stacktrace = models.CharField(max_length=10000, default="")
 
+    def removePIIData(reports):
+        # Delete identifiable parts of chosen reports
+        reports.update(uid="")
+        reports.update(host="")
+        reports.update(user_id="")
+        reports.update(textBox="")
+        reports.update(stacktrace="")
+
+        UserDetails.clearOrphanedRecords()
+
 
 class UserDetails(models.Model):
     name = models.CharField(max_length=input_box_max_length,
                             help_text="user provided name")
     email = models.CharField(max_length=input_box_max_length,
                              help_text="user provided email")
+
+    def clearOrphanedRecords():
+        # First sort all UserDetailRecords by their
+        # Foreign Key count "errorreport", then using a named pipe
+        # Filter out all records equal to 0
+        no_refs = UserDetails.objects.annotate(
+            num_refs=models.Count('errorreport')).filter(num_refs=0)
+        no_refs.delete()
 
 
 def notify_report_received(sender, instance, signal, *args, **kwargs):
