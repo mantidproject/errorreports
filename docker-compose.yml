@@ -57,5 +57,5 @@ services:
 
 volumes:
   webdata:
-  # If this is changed remember to update the bin/boot.sh script
+  # If this is changed remember to run the bin/shutdown.sh then bin/boot.sh script
   pgdata:
