@@ -1,5 +1,11 @@
 [![Build Status](https://travis-ci.org/mantidproject/errorreports.svg?branch=master)](https://travis-ci.org/mantidproject/errorreports)
 
+When developing, to send errorreports to your localhost server, edit `mantid_build_dir/bin/Mantid.properties`, change these lines:
+```
+usagereports.enabled = 1
+errorreports.rooturl = http://localhost:8082
+```
+
 Working with docker
 -------------------
 
@@ -36,7 +42,8 @@ To start the services locally you will first need to create a `.env` file next t
         EMAIL_PORT=587
         EMAIL_HOST_PASSWORD=<Api password need to retrieve from sparkpost>
         EMAIL_TO_ADDRESS=<email to recieve reports>
-        EMAIL_FROM_ADDRESS=error-reports@mantidproject.org   
+        EMAIL_FROM_ADDRESS=error-reports@mantidproject.org
+        SLACK_WEBHOOK_URL=https://hooks.slack.com/services/.......
 
 The values of each key are irrelevant for the test setup. For production they need to be kept secret. The email enviromental variables may be left out if emailing functionality is not required.
 
@@ -45,7 +52,7 @@ Now start the services with:
 ```
 $ bin/boot.sh
 ```
-and the site will be viewable at `localhost:8082`.
+and the site will be viewable at `http://localhost:8082/admin`.
 
 To stop the services execute:
 
@@ -59,7 +66,9 @@ Working with Django
 
 The first time you create a database you will need to create a Django admin account to access the Django admin interface. To do so first get into the docker container by running `docker exec -it <docker-web-container-name> bash` and then run `python manage.py createsuperuser`.
 
-To remove old recovery files a Django command has been added. Running `docker exec <web-container-name> python manage.py removeolddata` this will remove all recovery files over 30 days old. Supplying a positional integer argument will change the number of days old a file has to be to be removed. The `--all` option will remove all recovery files.
+To see current web containers run `docker-compose ps`, for example: `errorreports_web_1`
+
+To remove old error reports a Django command has been added. Running `docker exec <web-container-name> python manage.py removeoldreports` this will remove error reports over 90 days old. Supplying a positional integer argument will change the number of days old a report has to be to be removed. The `--all` option will remove reports!
 
 OSX Setup
 ---------
@@ -78,6 +87,7 @@ On OSX we can use a `VirtualBox` driver to execute the `Dockerfile`
         EMAIL_HOST_PASSWORD=<Api password need to retrieve from sparkpost>
         EMAIL_TO_ADDRESS=<email to recieve reports>
         EMAIL_FROM_ADDRESS=error-reports@mantidproject.org
+        SLACK_WEBHOOK_URL=https://hooks.slack.com/services/.......
 
 2. Create a virtual machine called `development`
 
@@ -90,6 +100,17 @@ On OSX we can use a `VirtualBox` driver to execute the `Dockerfile`
 
         VBoxManage controlvm "development" natpf1 "tcp-port8082,tcp,,8082,,8082";
 
+
+Migration Files
+---------------
+
+When changes have been made to the server, Django will create a migration file on docker in `web/services/migrations` reflecting these changes. When editing this repo, look for a docker migration file, copy to your local system and include in your PR.
+
+1. run `docker-compse ps` and check for the relevant web container e.g. `errorreports_web_1`
+2. Enter docker and find the migration file: `docker exec -it errorreports_web_1 bash` It should be in services/migrations.
+3. Exit docker (Ctrl+D) and copy over the migration file, giving it a better name relevant to the server changes: `docker cp errorreports_web_1:/usr/src/app/services/migrations/0005_auto_20200123_1058.py web/services/migrations/0005_stacktrace_added_recoveryfile_removed.py`
+4. Add this to your PR!
+
 Misc Docker Commands
 --------------------
 
@@ -98,7 +119,7 @@ the various containers:
 
 * start a shell:
 ```
-$ docker-compose  exec web bash
+$ docker-compose exec web bash
 ```
 
 * show details of the database volume
@@ -125,7 +146,10 @@ Then change to the correct database (defined in the `.env` file as `django`) and
 ```
 $ docker-compose exec web bash
 ```
-
+* Remove orphaned containers:
+```
+docker-compose down --remove-orphans
+```
 Delete things
 =============
 remove containers
