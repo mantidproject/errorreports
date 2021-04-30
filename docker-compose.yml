@@ -46,7 +46,7 @@ services:
       - MAIL_PORT
       - ERROR_EMAIL
 
-  nginx:
+  nginx_errorreports:
     restart: always
     build: ./nginx/
     env_file: .env
@@ -54,8 +54,16 @@ services:
       - "${HOST_PORT}:80"
     volumes:
       - webdata:/usr/src/app
+    networks:
+      - default
+      - nginx_net
 
 volumes:
   webdata:
   # If this is changed remember to run the bin/shutdown.sh then bin/boot.sh script
   pgdata:
+
+networks:
+
+  nginx_net:
+    external: true
