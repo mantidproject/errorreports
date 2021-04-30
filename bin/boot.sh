@@ -2,7 +2,7 @@
 # Starts the stack
 
 function mk_django_secret() {
-  python -c "import random,string;print('%s'%''.join([random.SystemRandom().choice(\"{}{}{}\".format(string.ascii_letters, string.digits, string.punctuation)) for i in range(63)]))";
+  python3 -c "import random,string;print('%s'%''.join([random.SystemRandom().choice(\"{}{}{}\".format(string.ascii_letters, string.digits, string.punctuation)) for i in range(63)]))";
 }
 
 function create_external_net(){
