@@ -46,7 +46,7 @@ services:
       - MAIL_PORT
       - ERROR_EMAIL
 
-  nginx_errorreports:
+  nginx-errorreports:
     restart: always
     build: ./nginx/
     env_file: .env
