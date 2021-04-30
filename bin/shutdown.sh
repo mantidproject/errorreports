@@ -13,3 +13,5 @@ docker-compose down
 # come from an image
 echo "Removing webdata volume so it is rebuilt on next startup"
 docker volume rm ${PROJECT_NAME}_webdata
+echo "Removing external network nginx_net"
+docker network rm nginx_net

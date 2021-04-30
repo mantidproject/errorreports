@@ -2,7 +2,13 @@
 # Starts the stack
 
 function mk_django_secret() {
-  python -c "import random,string;print('%s'%''.join([random.SystemRandom().choice(\"{}{}{}\".format(string.ascii_letters, string.digits, string.punctuation)) for i in range(63)]))";
+  python3 -c "import random,string;print('%s'%''.join([random.SystemRandom().choice(\"{}{}{}\".format(string.ascii_letters, string.digits, string.punctuation)) for i in range(63)]))";
+}
+
+function create_external_net(){
+  network_name=nginx_net
+  docker network inspect nginx_net >/dev/null 2>&1 || \
+    docker network create --driver bridge nginx_net
 }
 
 SCRIPTPATH=$(cd "$(dirname "$0")"; pwd -P)
@@ -53,6 +59,8 @@ if [ ! -f ${SOURCE_DIR}/.env ]; then
   exit 1
 fi
 
+# Start external network
+create_external_net
 # Build services
 docker-compose ${COMPOSE_FILES} --project-name ${PROJECT_NAME} build
 # Bring up the stack and detach
