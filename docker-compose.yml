@@ -1,20 +1,18 @@
-version: '3.2'
+version: "3.2"
 services:
   postgres:
     image: postgres:latest
-# Uncomment this line and update to enable different configuration settings
-#    command: postgres -c log_min_duration_statement=0
     restart: always
     volumes:
-      - pgdata:/var/lib/postgresql/data/
+      - ./pgdata:/var/lib/postgresql/data/
     env_file: .env
     environment:
-      - POSTGRES_USER=${DB_USER}
-      - POSTGRES_PASSWORD=${DB_PASS}
-      - POSTGRES_DB=${DB_NAME}
-      - DB_SERVICE
-      - DB_PORT
-      - SECRET_KEY
+      POSTGRES_USER: ${DB_USER}
+      POSTGRES_PASSWORD: ${DB_PASS}
+      POSTGRES_DB: ${DB_NAME}
+      DB_SERVICE: ${DB_SERVICE}
+      DB_PORT: ${DB_PORT}
+      SECRET_KEY: ${SECRET_KEY}
 
   adminer:
     image: adminer
@@ -29,7 +27,7 @@ services:
     restart: always
     build: ./web
     volumes:
-      - webdata:/usr/src/app
+      - ./webdata:/usr/src/app
     expose:
       # Change the value in the nginx configuration if this is changed
       - "8000"
@@ -37,14 +35,14 @@ services:
       - postgres
     env_file: .env
     environment:
-      - DB_SERVICE
-      - DB_PORT
-      - SECRET_KEY
+      DB_SERVICE: ${DB_SERVICE}
+      DB_PORT: ${DB_PORT}
+      SECRET_KEY: ${SECRET_KEY}
       # Define this in .env for development mode. DO NOT USE IN PRODUCTION
-      - DEBUG
-      - MAIL_PASS
-      - MAIL_PORT
-      - ERROR_EMAIL
+      DEBUG: ${DEBUG}
+      MAIL_PASS: ${MAIL_PASS}
+      MAIL_PORT: ${MAIL_PORT}
+      ERROR_EMAIL: ${ERROR_EMAIL}
 
   nginx-errorreports:
     restart: always
@@ -53,17 +51,11 @@ services:
     ports:
       - "${HOST_PORT}:80"
     volumes:
-      - webdata:/usr/src/app
+      - ./webdata:/usr/src/app
     networks:
       - default
       - nginx_net
 
-volumes:
-  webdata:
-  # If this is changed remember to run the bin/shutdown.sh then bin/boot.sh script
-  pgdata:
-
 networks:
-
   nginx_net:
     external: true
