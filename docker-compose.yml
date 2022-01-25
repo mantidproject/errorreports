@@ -26,8 +26,6 @@ services:
   web:
     restart: always
     build: ./web
-    volumes:
-      - ./webdata:/usr/src/app
     expose:
       # Change the value in the nginx configuration if this is changed
       - "8000"
