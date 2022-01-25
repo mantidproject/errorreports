@@ -23,6 +23,6 @@ mkdir -p "$SOURCE_DIR/webdata"
 # Start external network
 create_external_net
 # Build services
-docker-compose ${COMPOSE_FILES} --project-name ${PROJECT_NAME} build
+docker-compose --project-name ${PROJECT_NAME} build
 # Bring up the stack and detach
-docker-compose ${COMPOSE_FILES} --project-name ${PROJECT_NAME} up -d
+docker-compose --project-name ${PROJECT_NAME} up -d
