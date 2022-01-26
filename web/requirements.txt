@@ -1,8 +1,8 @@
-Django==2.2.24
-djangorestframework==3.11.2
-django-filter==2.2.0
+Django==3.2.11
+djangorestframework==3.13.1
+django-filter==2.4.0
 Markdown
 gunicorn
 gevent
 psycopg2-binary
-requests==2.23.0
+requests
