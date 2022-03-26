@@ -1,4 +1,4 @@
-[![Build Status](https://travis-ci.org/mantidproject/errorreports.svg?branch=master)](https://travis-ci.org/mantidproject/errorreports)
+![Build Status](https://github.com/mantidproject/errorreports/actions/workflows/ci.yml/badge.svg)
 
 When developing, to send errorreports to your localhost server, edit `mantid_build_dir/bin/Mantid.properties`, change these lines:
 ```
