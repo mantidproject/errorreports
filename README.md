@@ -18,7 +18,6 @@ While developing this server Mantid can be configured to send to the instance
 started locally by editing `mantid_build_dir/bin/Mantid.properties` and changing
 
 ```sh
-usagereports.enabled = 1
 errorreports.rooturl = http://localhost:8083
 ```
 
