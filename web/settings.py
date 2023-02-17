@@ -25,6 +25,8 @@ SECRET_KEY = os.environ['SECRET_KEY']
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = os.getenv('DEBUG', 'NO').lower() in ('on', 'true', 'y', 'yes')
 
+DEFAULT_AUTO_FIELD='django.db.models.BigAutoField'
+
 ALLOWED_HOSTS = ['*']
 
 MEDIA_ROOT = '/usr/src/app/recovery'
