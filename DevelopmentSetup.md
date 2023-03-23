@@ -188,3 +188,17 @@ docker-compose exec web python manage.py createsuperuser
 
 and enter the requested details. Once the account has been created go to
 `http://localhost:<HOST_PORT>/admin` and login with the details you provided.
+
+## Troubleshooting
+
+If you are having problems connecting to the localhost with an obscure error code, try
+add the ``DEBUG=True`` variable to your ``.env`` file. This will provide a better
+error message to help you debug the problem.
+
+An error about invalid credentials could be caused by persisting data from a previous
+time you have looked at this repo. To clear any persisting data, run the following
+command:
+
+```sh
+bash bin/shutdown.sh
+```
