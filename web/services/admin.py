@@ -1,4 +1,6 @@
 from django.contrib import admin
+from django.urls import reverse
+from django.utils.safestring import mark_safe   
 # Register your models here.
 from services.models import ErrorReport, UserDetails
 
@@ -15,13 +17,15 @@ class ErrorAdmin(admin.ModelAdmin):
         'exitCode',
         'upTime',
         'textBox',
-        'get_user_email',
+        'user_link',
         'stacktrace')
 
-    def get_user_email(self, obj):
-        return obj.user.email if obj.user else ''
-    get_user_email.admin_order_field = 'user__email'
-    get_user_email.short_description = 'User provided email'
+    def user_link(self, obj):
+        return mark_safe('<a href="{}">{}</a>'.format(
+            reverse("admin:services_userdetails_change", args=(obj.user.pk,)),
+            obj.user.email
+        ))
+    user_link.short_description = 'User'
 
 
 class UserAdmin(admin.ModelAdmin):

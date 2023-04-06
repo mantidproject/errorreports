@@ -129,7 +129,7 @@ in the right location.
 Clone this repository locally:
 
 ```sh
-> git clone https://github.com/mantidproject/reports.git
+> git clone https://github.com/mantidproject/errorreports.git
 ```
 
 ## Creating an Environment (.env) File
@@ -189,6 +189,14 @@ docker-compose exec web python manage.py createsuperuser
 and enter the requested details. Once the account has been created go to
 `http://localhost:<HOST_PORT>/admin` and login with the details you provided.
 
+## Shutdown the Server
+
+When finished with the server, from the root of your source directory, you can shut it down:
+
+```sh
+bash bin/shutdown.sh
+```
+
 ## Troubleshooting
 
 If you are having problems connecting to the localhost with an obscure error code, try
@@ -196,9 +204,4 @@ add the ``DEBUG=True`` variable to your ``.env`` file. This will provide a bette
 error message to help you debug the problem.
 
 An error about invalid credentials could be caused by persisting data from a previous
-time you have looked at this repo. To clear any persisting data, run the following
-command:
-
-```sh
-bash bin/shutdown.sh
-```
+time you have looked at this repo. To clear any persisting data, run the shutdown script.
