@@ -129,7 +129,7 @@ in the right location.
 Clone this repository locally:
 
 ```sh
-> git clone https://github.com/mantidproject/reports.git
+> git clone https://github.com/mantidproject/errorreports.git
 ```
 
 ## Creating an Environment (.env) File
