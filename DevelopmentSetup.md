@@ -200,7 +200,7 @@ bash bin/shutdown.sh
 ```
 
 If you are testing this locally and NOT on the production server you will also need to remove some persisting postgres data.
-Not removing this data will provent you from running the Django Admin Account step above. To remove the data run
+Not removing this data will prevent you from running the Django Admin Account step above. To remove the data run
 ```sh
 sudo rm -rf pgdata/
 ```
