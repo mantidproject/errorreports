@@ -189,12 +189,20 @@ docker-compose exec web python manage.py createsuperuser
 and enter the requested details. Once the account has been created go to
 `http://localhost:<HOST_PORT>/admin` and login with the details you provided.
 
-## Shutdown the Server
+If this step fails then see section below on Shutdown the Server and remove postgres volume.
+
+## Shutdown the Server and remove postgres volume
 
 When finished with the server, from the root of your source directory, you can shut it down:
 
 ```sh
 bash bin/shutdown.sh
+```
+
+If you are testing this locally and NOT on the production server you will also need to remove some persisting postgres data.
+Not removing this data will provent you from running the Django Admin Account step above. To remove the data run
+```sh
+sudo rm -rf pgdata/
 ```
 
 ## Troubleshooting
