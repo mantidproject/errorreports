@@ -189,7 +189,7 @@ docker-compose exec web python manage.py createsuperuser
 and enter the requested details. Once the account has been created go to
 `http://localhost:<HOST_PORT>/admin` and login with the details you provided.
 
-If this step fails then see section below on Shutdown the Server and remove postgres volume.
+If this step fails then see the section below on Shutdown the Server and remove postgres volume.
 
 ## Shutdown the Server and remove postgres volume
 
