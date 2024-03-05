@@ -46,6 +46,7 @@ class ErrorReport(models.Model):
                                default="",
                                null="True")
     stacktrace = models.CharField(max_length=10000, default="")
+    githubIssueNumber = models.CharField(max_length=16, default="")
 
     def removePIIData(reports):
         # Delete identifiable parts of chosen reports
