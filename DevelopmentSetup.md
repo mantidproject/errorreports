@@ -201,6 +201,7 @@ bash bin/shutdown.sh
 
 If you are testing this locally and NOT on the production server you will also need to remove some persisting postgres data.
 Not removing this data will prevent you from running the Django Admin Account step above. To remove the data run
+
 ```sh
 sudo rm -rf pgdata/
 ```
@@ -213,3 +214,18 @@ error message to help you debug the problem.
 
 An error about invalid credentials could be caused by persisting data from a previous
 time you have looked at this repo. To clear any persisting data, run the shutdown script.
+
+## Known issues
+
+### Warnings in docker logs when applying migrations
+
+If the `./pgdata` directory does not exist, i.e. when starting the services
+for the very first time, you will see warnings from Django such as
+
+```sh
+makemigrations.py:105: RuntimeWarning: Got an error checking a consistent migration history performed for database connection 'default': connection to server at "postgres" (192.168.128.2), port 5432 failed: Connection refused
+   Is the server running on that host and accepting TCP/IP connections?
+```
+
+This is expected as the app has not been initialized yet so the DB does not
+exist. The script will continue as expected.
