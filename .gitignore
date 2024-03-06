@@ -3,3 +3,5 @@
 .idea/
 pgdata/
 webdata/
+*__pycache__/
+.vscode/
