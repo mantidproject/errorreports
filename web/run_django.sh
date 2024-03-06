@@ -1,9 +1,23 @@
 #!/bin/sh
 
-# Initialize the database layers
+# Collect static files into location shared by nginx
+echo "Running collectstatic..."
 python manage.py collectstatic --noinput
+echo "Fixing permissions on /usr/src/app/static"
 chmod 755 -R /usr/src/app/static
+
+# Create any new DB migrations and apply those in version control.
+# Note that running this script for the very first time produces
+# Django warnings such as for both makemigrations and migrate:
+#
+#   makemigrations.py:105: RuntimeWarning: Got an error checking a consistent migration history performed for database connection 'default': connection to server at "postgres" (192.168.128.2), port 5432 failed: Connection refused
+#   Is the server running on that host and accepting TCP/IP connections?
+#
+# This is expected as the app has not been initialized yet so the DB does not
+# exist.
+echo "Running makemigrations..."
 python manage.py makemigrations --noinput
+echo "Running migrate..."
 python manage.py migrate --noinput
 
 # If running in DEBUG mode add debug logging to gunicorn

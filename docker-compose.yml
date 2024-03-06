@@ -13,6 +13,11 @@ services:
       DB_SERVICE: ${DB_SERVICE}
       DB_PORT: ${DB_PORT}
       SECRET_KEY: ${SECRET_KEY}
+    healthcheck:
+      test: [ "CMD-SHELL", "pg_isready" ]
+      interval: 10s
+      timeout: 5s
+      retries: 5
 
   adminer:
     image: adminer
@@ -32,7 +37,8 @@ services:
       # Change the value in the nginx configuration if this is changed
       - "8000"
     depends_on:
-      - postgres
+      postgres:
+        condition: service_healthy
     env_file: .env
     environment:
       DB_SERVICE: ${DB_SERVICE}
