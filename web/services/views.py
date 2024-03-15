@@ -1,4 +1,5 @@
 from services.models import ErrorReport, UserDetails
+from services.github_issue_manager.github_issue_manager import get_or_create_github_issue
 from services.constants import input_box_max_length
 from rest_framework import response, viewsets, views
 from rest_framework.decorators import api_view
@@ -114,6 +115,9 @@ def saveErrorReport(report):
     else:
         user = None
 
+    #issue_number = get_or_create_github_issue(report)
+    issue_number = ''
+
     obj, created = \
         ErrorReport.objects.get_or_create(osReadable=osReadable,
                                           application=application,
@@ -130,7 +134,8 @@ def saveErrorReport(report):
                                           exitCode=exitCode,
                                           user=user,
                                           textBox=textBox,
-                                          stacktrace=stacktrace)
+                                          stacktrace=stacktrace,
+                                          githubIssueNumber=issue_number)
     if not created:
         obj.save()
 
