@@ -2,7 +2,6 @@ ENV_FILE=.env
 DB_DIR=pgdata
 DJANGO_SERVICE_NAME=web
 CLEAN_ENV=false
-CLEAN_DB=false
 CLEAN_SERVICES=false
 
 if [[ ! -f "$ENV_FILE" ]]; then
@@ -23,7 +22,6 @@ if [[ ! -f "$ENV_FILE" ]]; then
   sed -e 's@DB_PASS=<Not Set>@DB_PASS=testuserpasswd@' |\
   sed -e 's@SLACK_WEBHOOK_URL=<Not Set>@SLACK_WEBHOOK_URL=@' > ${ENV_FILE}
   CLEAN_ENV=true
-  CLEAN_DB=true
 else
   echo "Running tests using an existing environment file..."
 fi
@@ -47,8 +45,4 @@ fi
 if [[ $CLEAN_ENV == true ]]; then
   echo "Cleaning auto-generated .env file"
   rm -f $ENV_FILE
-fi
-if [[ $CLEAN_DB == true ]]; then
-  echo "Cleaning test DB"
-  rm -fr ${DB_DIR}
 fi
