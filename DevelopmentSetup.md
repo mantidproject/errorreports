@@ -206,11 +206,32 @@ Not removing this data will prevent you from running the Django Admin Account st
 sudo rm -rf pgdata/
 ```
 
-## Troubleshooting
+## Enable live code editing
 
-If you are having problems connecting to the localhost with an obscure error code, try
-add the ``DEBUG=True`` variable to your ``.env`` file. This will provide a better
-error message to help you debug the problem.
+By default changes to the Python code are not reflected in the running version until
+`bin/shutdown.sh` followed by `bin/boot.sh`. This is because the Python in `web`
+is copied inside the Docker image at build time.
+
+It is possible to configure the setup locally such that edits to the Python files
+in `web` are shared with the running containers immediately. Add a file, alongside
+`docker-compose.yml`, called `docker-compose.override.yml` with the following contents:
+
+```yml
+version: '3'
+
+services:
+  web:
+    environment:
+      - DEBUG=true
+    volumes:
+      - ./web:/usr/src/app:ro
+      - webdata:/static
+```
+
+This file is automatically registered by `docker-compose` and overrides the default
+production configuration. **Do not add this file to the version control system!**.
+
+## Troubleshooting
 
 An error about invalid credentials could be caused by persisting data from a previous
 time you have looked at this repo. To clear any persisting data, run the shutdown script.

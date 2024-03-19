@@ -18,9 +18,9 @@ python manage.py makemigrations --noinput
 echo "Running migrate..."
 python manage.py migrate --noinput
 
-# If running in DEBUG mode add debug logging to gunicorn
-if [ -n "${DEBUG}" ]; then
-  DEBUG_ARGS="--log-level debug --capture-output"
+# If running in DEBUG mode add debug logging and hot reload to gunicorn
+if [[ ${DEBUG} == true ]]; then
+  DEBUG_ARGS="--log-level debug --capture-output --reload"
 else
   DEBUG_ARGS=
 fi
