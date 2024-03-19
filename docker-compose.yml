@@ -32,7 +32,7 @@ services:
     restart: always
     build: ./web
     volumes:
-      - webdata:/usr/src/app
+      - webdata:/static
     expose:
       # Change the value in the nginx configuration if this is changed
       - "8000"
@@ -54,7 +54,7 @@ services:
     ports:
       - "${HOST_PORT}:80"
     volumes:
-      - webdata:/usr/src/app
+      - webdata:/static
     networks:
       - default
       - nginx_net
@@ -62,6 +62,7 @@ services:
 volumes:
   # This allows Nginx to serve static content, as Django won't...
   webdata:
+
 
 networks:
   nginx_net:

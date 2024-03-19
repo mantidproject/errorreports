@@ -3,8 +3,6 @@
 # Collect static files into location shared by nginx
 echo "Running collectstatic..."
 python manage.py collectstatic --noinput
-echo "Fixing permissions on /usr/src/app/static"
-chmod 755 -R /usr/src/app/static
 
 # Create any new DB migrations and apply those in version control.
 # Note that running this script for the very first time produces
