@@ -36,7 +36,7 @@ else
 fi
 
 echo "Executing web tests..."
-docker-compose exec $DJANGO_SERVICE_NAME sh -c "python manage.py test"
+docker-compose exec $DJANGO_SERVICE_NAME sh -c "python manage.py test $@"
 
 # Clean up
 if [[ $CLEAN_SERVICES == true ]]; then
