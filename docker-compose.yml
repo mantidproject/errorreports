@@ -46,9 +46,6 @@ services:
       SECRET_KEY: ${SECRET_KEY}
       # Define this in .env for development mode. DO NOT USE IN PRODUCTION
       DEBUG: ${DEBUG}
-      MAIL_PASS: ${MAIL_PASS}
-      MAIL_PORT: ${MAIL_PORT}
-      ERROR_EMAIL: ${ERROR_EMAIL}
 
   nginx-errorreports:
     restart: always

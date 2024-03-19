@@ -22,7 +22,7 @@ def send_notification_to_slack(name,
     :param additional_text: Any additional text provided
     """
     slack_webhook_url = settings.SLACK_WEBHOOK_URL
-    if slack_webhook_url is None:
+    if not slack_webhook_url:
         return
     text = """Name: {}  Email: {}
         Additional text:
