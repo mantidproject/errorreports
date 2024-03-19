@@ -28,7 +28,7 @@ else
   echo "Running tests using an existing environment file..."
 fi
 
-if [[ -z $(docker-compose ps --quiet --status running $DJANGO_SERVICE_NAME) ]]; then
+if [[ -z $(docker-compose ps --quiet --filter status=running $DJANGO_SERVICE_NAME) ]]; then
   echo "Booting services."
   ./bin/boot.sh
   CLEAN_SERVICES=true
