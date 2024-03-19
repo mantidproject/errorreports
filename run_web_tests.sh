@@ -17,9 +17,10 @@ if [[ ! -f "$ENV_FILE" ]]; then
   echo "No $ENV_FILE file and no DB found. Generating .env file for tests."
   echo "Both .env file and DB will be cleaned "
   cat blank.env |\
+  sed -e "s@DEBUG=false@DEBUG=true@" |\
   sed -e "s@SECRET_KEY=<Not Set>@SECRET_KEY=123456789abcdefghijkl@" |\
   sed -e 's@DB_USER=<Not Set>@DB_USER=testuser@' |\
-  sed -e 's@DB_PASS=<Not Set>@DB_PASS=testuserpasswd@'|\
+  sed -e 's@DB_PASS=<Not Set>@DB_PASS=testuserpasswd@' |\
   sed -e 's@SLACK_WEBHOOK_URL=<Not Set>@SLACK_WEBHOOK_URL=@' > ${ENV_FILE}
   CLEAN_ENV=true
   CLEAN_DB=true
