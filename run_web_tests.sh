@@ -5,8 +5,8 @@ CLEAN_ENV=false
 CLEAN_SERVICES=false
 
 if [[ ! -f "$ENV_FILE" ]]; then
-  if [[ -f "$DB_DIR/PG_VERSION" ]]; then
-    echo "A $ENV_FILE file could not be found yet a non-empty '${DB_DIR}' directory exists."
+  if [[ -d ${DB_DIR} ]]; then
+    echo "A $ENV_FILE file could not be found yet a '${DB_DIR}' directory exists."
     echo "This implies a database has been created but the credentials are missing."
     echo "Tests will fail as they won't be able to access the database."
     echo "IF IN A DEVELOPMENT ENVIRONMENT remove ${DB_DIR} and re-run this script."
