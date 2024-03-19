@@ -25,4 +25,6 @@ create_external_net
 # Build services
 docker-compose --project-name ${PROJECT_NAME} build
 # Bring up the stack and detach
-docker-compose --project-name ${PROJECT_NAME} up -d
+docker-compose --project-name ${PROJECT_NAME} up --wait
+
+echo "Services booted"
