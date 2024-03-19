@@ -18,7 +18,6 @@ fi
 
 # Create empty directories, so they are not owned by root
 mkdir -p "$SOURCE_DIR/pgdata"
-mkdir -p "$SOURCE_DIR/webdata"
 
 # Start external network
 create_external_net

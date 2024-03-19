@@ -12,8 +12,7 @@ docker-compose down
 # the web data volume shouldn't really be persistent as all of the files
 # come from an image
 echo "Removing webdata volume so it is rebuilt on next startup"
-rm -r "${SOURCE_DIR}/webdata"
-docker volume rm errorreports_webdata
+docker volume rm ${PROJECT_NAME}_webdata
 
 echo "Removing external network nginx_net"
 docker network rm nginx_net
