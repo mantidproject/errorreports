@@ -3,8 +3,6 @@
 # Collect static files into location shared by nginx
 echo "Running collectstatic..."
 python manage.py collectstatic --noinput
-echo "Fixing permissions on /usr/src/app/static"
-chmod 755 -R /usr/src/app/static
 
 # Create any new DB migrations and apply those in version control.
 # Note that running this script for the very first time produces
@@ -20,9 +18,9 @@ python manage.py makemigrations --noinput
 echo "Running migrate..."
 python manage.py migrate --noinput
 
-# If running in DEBUG mode add debug logging to gunicorn
-if [ -n "${DEBUG}" ]; then
-  DEBUG_ARGS="--log-level debug --capture-output"
+# If running in DEBUG mode add debug logging and hot reload to gunicorn
+if [[ ${DEBUG} == true ]]; then
+  DEBUG_ARGS="--log-level debug --capture-output --reload"
 else
   DEBUG_ARGS=
 fi
