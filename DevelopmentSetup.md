@@ -224,7 +224,7 @@ services:
     environment:
       - DEBUG=true
     volumes:
-      - ./web:/usr/src/app:ro
+      - ./web:/usr/src/app
       - webdata:/static
 ```
 
