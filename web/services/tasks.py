@@ -55,7 +55,7 @@ def send_notification_to_slack(name,
 
 def send_logging_output_to_slack(message):
     slack_webhook_url = settings.SLACK_WEBHOOK_URL
-    if slack_webhook_url is None:
+    if not slack_webhook_url:
         return
     requests.post(slack_webhook_url,
                   json={

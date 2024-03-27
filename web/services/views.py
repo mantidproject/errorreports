@@ -115,8 +115,7 @@ def saveErrorReport(report):
     else:
         user = None
 
-    #issue_number = get_or_create_github_issue(report)
-    issue_number = ''
+    issue_number = get_or_create_github_issue(report)
 
     obj, created = \
         ErrorReport.objects.get_or_create(osReadable=osReadable,
