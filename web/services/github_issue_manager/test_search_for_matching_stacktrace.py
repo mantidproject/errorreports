@@ -1,5 +1,5 @@
 from django.test import TestCase
-from services.models import ErrorReport
+from services.models import ErrorReport, GithubIssue
 from services.github_issue_manager.github_issue_manager import _search_for_matching_stacktrace
 
 
@@ -42,24 +42,25 @@ class MatchingStackTraceSearchTest(TestCase):
             'mantidSha1': 'e9423bdb34b07213a69caa90913e40307c17c6cc'
         }
         for trace, issue_number in self.entries:
-            ErrorReport.objects.create(stacktrace=trace, githubIssueNumber=issue_number, **defaults)
+            issue = GithubIssue.objects.create(repoName="my/repo", issueNumber=issue_number)
+            ErrorReport.objects.create(stacktrace=trace, githubIssue=issue, **defaults)
 
     def test_retrieve_issue_number_with_identical_trace(self):
         for trace, issue_number in self.entries:
-            self.assertEqual(issue_number, _search_for_matching_stacktrace(trace))
+            self.assertEqual(issue_number, _search_for_matching_stacktrace(trace).issueNumber)
 
     def test_retrieve_issue_number_with_different_path_seperators(self):
         for trace, issue_number in self.entries:
             altered_trace = trace.replace('/', '\\') if '/' in trace else trace.replace('\\','/')
-            self.assertEqual(issue_number, _search_for_matching_stacktrace(altered_trace))
+            self.assertEqual(issue_number, _search_for_matching_stacktrace(altered_trace).issueNumber)
 
     def test_different_user_name_yields_same_issue_number(self):
         trace, issue_number = self.entries[0]
         trace.replace('username', 'different_username')
-        self.assertEqual(issue_number, _search_for_matching_stacktrace(trace))
+        self.assertEqual(issue_number, _search_for_matching_stacktrace(trace).issueNumber)
 
     def test_different_install_location_yields_same_issue_number(self):
         trace, issue_number = self.entries[1]
         trace.replace('MantidInstall', 'my\\mantid\\install')
-        self.assertEqual(issue_number, _search_for_matching_stacktrace(trace))
+        self.assertEqual(issue_number, _search_for_matching_stacktrace(trace).issueNumber)
             

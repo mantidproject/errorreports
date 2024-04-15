@@ -46,7 +46,10 @@ class ErrorReport(models.Model):
                                default="",
                                null="True")
     stacktrace = models.CharField(max_length=10000, default="")
-    githubIssueNumber = models.CharField(max_length=16, default="", blank=True)
+    githubIssue = models.ForeignKey('GithubIssue',
+                                    on_delete=models.SET_NULL,
+                                    blank=True,
+                                    null=True)
 
     def removePIIData(reports):
         # Delete identifiable parts of chosen reports
@@ -72,6 +75,13 @@ class UserDetails(models.Model):
         no_refs = UserDetails.objects.annotate(
             num_refs=models.Count('errorreport')).filter(num_refs=0)
         no_refs.delete()
+
+class GithubIssue(models.Model):
+    repoName = models.CharField(max_length=200,
+                                     default="",
+                                     blank=True,
+                                     help_text="'user/repo_name': for example 'mantidproject/mantid'")
+    issueNumber = models.CharField(max_length=16, default="", blank=True)
 
 
 def notify_report_received(sender, instance, signal, *args, **kwargs):

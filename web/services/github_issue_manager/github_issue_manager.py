@@ -1,4 +1,4 @@
-from services.models import ErrorReport
+from services.models import ErrorReport, GithubIssue
 
 import re
 import pathlib
@@ -34,7 +34,7 @@ $info
 """)
 
 
-def get_or_create_github_issue(report) -> str | None:
+def get_or_create_github_issue(report) -> GithubIssue | None:
     """
     Given the stacktrace from the report, search for database entries with the same trace.
     If found and there is a linked github issue, leave a comment with the report's key information.
@@ -49,9 +49,9 @@ def get_or_create_github_issue(report) -> str | None:
         report: The report recived by ErrorViewSet
 
     Returns:
-        str | None: The number of the issue created or modified, or None
+        GithubIssue | None: A reference to a new or existing GithubIssue table entry, or None
     """
-    if not report["stacktrace"] and not report['textBox']:
+    if not report.get('stacktrace') and not report.get('textBox'):
         logger.info('No stacktrace or info in the report; skipping github issue interaction')
         return None
 
@@ -65,10 +65,11 @@ def get_or_create_github_issue(report) -> str | None:
     g = Github(auth=auth)
     repo = g.get_repo(issue_repo)
 
-    issue_number = _search_for_matching_stacktrace(report["stacktrace"])
-    if issue_number:
-        if _search_for_repeat_user(report['uid'], issue_number) and not report['textBox']:
-            return issue_number
+    github_issue = _search_for_matching_stacktrace(report["stacktrace"])
+    if github_issue and issue_repo == github_issue.repoName:
+        issue_number = github_issue.issueNumber
+        if _search_for_repeat_user(report['uid'], github_issue) and not report['textBox']:
+            return github_issue
             
         comment_text = comment_text_template.substitute(name=report['name'],
                                                         email=report['email'],
@@ -78,7 +79,7 @@ def get_or_create_github_issue(report) -> str | None:
         issue = repo.get_issue(number=int(issue_number))
         issue.create_comment(comment_text)
         logger.info(f'Added comment to issue \#{issue_number} ({issue_repo})')
-        return issue_number
+        return github_issue
     else:
         issue_text = issue_text_template.substitute(name=report['name'],
                                                     email=report['email'],
@@ -88,7 +89,8 @@ def get_or_create_github_issue(report) -> str | None:
                                                     stacktrace=report['stacktrace'])
         issue = repo.create_issue(title="Automatic error report", body=issue_text)
         logger.info(f'Created issue \#{issue.number} ({issue_repo})')
-        return str(issue.number)
+        return GithubIssue.objects.create(repoName=issue_repo,
+                                          issueNumber=issue_number)
 
 def _trim_stacktrace(stacktrace: str) -> str:
     """
@@ -106,7 +108,7 @@ def _stacktrace_line_trimer(line: str) -> str:
         return path.as_posix() + match.group(4)
     return line
 
-def _search_for_matching_stacktrace(trace: str) -> str | None:
+def _search_for_matching_stacktrace(trace: str) -> GithubIssue | None:
     """
     Search the database for a matching stack trace (irrespective of os, local install location etc.)
 
@@ -114,21 +116,21 @@ def _search_for_matching_stacktrace(trace: str) -> str | None:
         trace (str): Raw stack trace from the report
 
     Returns:
-        str | None: Either an issue number to an existing issue, or None
+        str | None: Either a GithubIssue entry, or None
     """
     if not trace:
         return None
     trimmed_trace = _trim_stacktrace(trace)
-    for raw_trace, issue_number in ErrorReport.objects.exclude(githubIssueNumber__exact='').values_list('stacktrace', 'githubIssueNumber'):
+    for raw_trace, github_issue in ErrorReport.objects.exclude(githubIssue__isnull=True).values_list('stacktrace', 'githubIssue'):
         if _trim_stacktrace(raw_trace) == trimmed_trace:
-            return issue_number
+            return GithubIssue.objects.get(id=github_issue)
     return None
 
-def _search_for_repeat_user(uid: str, issue_number: str) -> bool:
+def _search_for_repeat_user(uid: str, github_issue: GithubIssue) -> bool:
     """
     Return true if the user id has already submitted the same error
     """
-    for entry_uid in ErrorReport.objects.filter(githubIssueNumber__exact=issue_number).values_list('uid'):
+    for entry_uid in ErrorReport.objects.filter(githubIssue=github_issue).values_list('uid'):
         if uid == entry_uid:
             return True
     return False

@@ -115,7 +115,7 @@ def saveErrorReport(report):
     else:
         user = None
 
-    issue_number = get_or_create_github_issue(report)
+    github_issue = get_or_create_github_issue(report)
 
     obj, created = \
         ErrorReport.objects.get_or_create(osReadable=osReadable,
@@ -134,7 +134,7 @@ def saveErrorReport(report):
                                           user=user,
                                           textBox=textBox,
                                           stacktrace=stacktrace,
-                                          githubIssueNumber=issue_number)
+                                          githubIssue=github_issue)
     if not created:
         obj.save()
 
