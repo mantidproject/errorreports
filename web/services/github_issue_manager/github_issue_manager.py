@@ -90,7 +90,7 @@ def get_or_create_github_issue(report) -> GithubIssue | None:
         issue = repo.create_issue(title="Automatic error report", body=issue_text)
         logger.info(f'Created issue \#{issue.number} ({issue_repo})')
         return GithubIssue.objects.create(repoName=issue_repo,
-                                          issueNumber=issue_number)
+                                          issueNumber=issue.number)
 
 def _trim_stacktrace(stacktrace: str) -> str:
     """
