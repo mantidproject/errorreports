@@ -118,6 +118,9 @@ def notify_report_received(sender, instance, signal, *args, **kwargs):
          and textBox in TEST_VALUES)):
         return
 
+    if instance.githubIssue:
+        issue_link = f"https://github.com/{instance.githubIssue.repoName}/issues/{instance.githubIssue.issueNumber}"
+
     notification_thread = threading.Thread(
         target=send_notification_to_slack, args=(name,
                                                  email,
@@ -125,7 +128,8 @@ def notify_report_received(sender, instance, signal, *args, **kwargs):
                                                  instance.stacktrace,
                                                  instance.application,
                                                  instance.mantidVersion,
-                                                 instance.osReadable))
+                                                 instance.osReadable,
+                                                 issue_link))
     notification_thread.start()
 
 
