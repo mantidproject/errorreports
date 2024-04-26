@@ -78,7 +78,7 @@ def get_or_create_github_issue(report) -> GithubIssue | None:
                                                         info=report['textBox'])
         issue = repo.get_issue(number=int(issue_number))
         issue.create_comment(comment_text)
-        logger.info(f'Added comment to issue \#{issue_number} ({issue_repo})')
+        logger.info(f'Added comment to issue {issue.url})')
         return github_issue
     else:
         issue_text = issue_text_template.substitute(name=report['name'],
@@ -87,8 +87,9 @@ def get_or_create_github_issue(report) -> GithubIssue | None:
                                                     version=report['mantidVersion'],
                                                     info=report['textBox'],
                                                     stacktrace=report['stacktrace'])
-        issue = repo.create_issue(title="Automatic error report", body=issue_text)
-        logger.info(f'Created issue \#{issue.number} ({issue_repo})')
+        error_report_label = repo.get_label("Error Report")
+        issue = repo.create_issue(title="Automatic error report", labels=[error_report_label], body=issue_text)
+        logger.info(f'Created issue {issue.url})')
         return GithubIssue.objects.create(repoName=issue_repo,
                                           issueNumber=issue.number)
 
