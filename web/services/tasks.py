@@ -10,7 +10,7 @@ Additional text:
 $add_text
 Stack Trace:
 $stacktrace
-Using: $application $version on $os                         
+Using: $application $version on $os
 $issue_link
 """)
 
@@ -35,14 +35,16 @@ def send_notification_to_slack(name,
     slack_webhook_url = settings.SLACK_WEBHOOK_URL
     if not slack_webhook_url:
         return
-    text = slack_message.substitute(name = _string_or_empty_field(name),
-                                    email = _string_or_empty_field(name),
-                                    add_text = _string_or_empty_field(additional_text),
-                                    stacktrace = _string_or_empty_field(stacktrace),
-                                    application = _string_or_empty_field(application),
-                                    version = _string_or_empty_field(version),
-                                    os = _string_or_empty_field(os),
-                                    issue_link = _string_or_empty_field(github_issue_link))
+    text = slack_message.substitute(
+        name=_string_or_empty_field(name),
+        email=_string_or_empty_field(name),
+        add_text=_string_or_empty_field(additional_text),
+        stacktrace=_string_or_empty_field(stacktrace),
+        application=_string_or_empty_field(application),
+        version=_string_or_empty_field(version),
+        os=_string_or_empty_field(os),
+        issue_link=_string_or_empty_field(github_issue_link)
+    )
     requests.post(slack_webhook_url,
                   json={
                       'channel': settings.SLACK_ERROR_REPORTS_CHANNEL,
@@ -50,7 +52,8 @@ def send_notification_to_slack(name,
                       'text': text,
                       'icon_emoji': settings.SLACK_ERROR_REPORTS_EMOJI
                   })
-    
+
+
 def _string_or_empty_field(value: str):
     return value if value else settings.SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT
 

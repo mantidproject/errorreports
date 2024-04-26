@@ -76,11 +76,13 @@ class UserDetails(models.Model):
             num_refs=models.Count('errorreport')).filter(num_refs=0)
         no_refs.delete()
 
+
 class GithubIssue(models.Model):
     repoName = models.CharField(max_length=200,
-                                     default="",
-                                     blank=True,
-                                     help_text="'user/repo_name': for example 'mantidproject/mantid'")
+                                default="",
+                                blank=True,
+                                help_text="'user/repo_name': for example "
+                                          "'mantidproject/mantid'")
     issueNumber = models.CharField(max_length=16, default="", blank=True)
 
 
@@ -119,7 +121,8 @@ def notify_report_received(sender, instance, signal, *args, **kwargs):
         return
 
     if instance.githubIssue:
-        issue_link = f"https://github.com/{instance.githubIssue.repoName}/issues/{instance.githubIssue.issueNumber}"
+        issue_link = (f"https://github.com/{instance.githubIssue.repoName}"
+                      f"/issues/{instance.githubIssue.issueNumber}")
 
     notification_thread = threading.Thread(
         target=send_notification_to_slack, args=(name,

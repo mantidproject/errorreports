@@ -1,6 +1,7 @@
 from services.github_issue_manager.github_issue_manager import _trim_stacktrace, _stacktrace_line_trimer
 import unittest
 
+
 class TrimStacktraceTest(unittest.TestCase):
 
     def test_user_specific_dirs_are_removed(self):
@@ -37,6 +38,7 @@ class TrimStacktraceTest(unittest.TestCase):
         }
         for line in examples:
             self.assertEqual(_stacktrace_line_trimer(line), line)
+
 
 if __name__ == '__main__':
     unittest.main()
