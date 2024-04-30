@@ -35,7 +35,7 @@ To get started for development please follow the instructions in [DevelopmentSet
 Old error reports can be removed with the following docker command:
 
 ```sh
-docker-compose exec web python manage.py removeoldreports [ndays] [--all]
+docker compose exec web python manage.py removeoldreports [ndays] [--all]
 ```
 
 where reports older than `ndays` are removed (default=90).

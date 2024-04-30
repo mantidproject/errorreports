@@ -5,7 +5,7 @@ system.
 As such, the only requirements for the host system are:
 
 * Docker
-* docker-compose
+* docker compose
 
 ## Installing Docker
 
@@ -100,7 +100,7 @@ Some of the text such as the hash values may vary.
 
 Congratulations your Docker installation is working!
 
-## Installing docker-compose
+## Installing docker compose
 
 [Docker Compose](https://docs.docker.com/compose/) is a tool for configuring
 and running applications by splitting them into multiple containers.
@@ -108,11 +108,11 @@ See the previous link for an introductory tutorial.
 
 ### macOS/Windows
 
-`docker-compose` is now included within Docker Desktop so if you have used this
+`docker compose` is now included within Docker Desktop so if you have used this
 method you have the command already. Verify this by running:
 
 ```sh
->docker-compose version
+>docker compose version
 ```
 
 that should print the compose version.
@@ -134,7 +134,7 @@ Clone this repository locally:
 
 ## Creating an Environment (.env) File
 
-The docker-compose configuration requires setting some environment variables
+The docker compose configuration requires setting some environment variables
 such as
 
 * the port to run on
@@ -183,7 +183,7 @@ setting up for the first time.
 To create the account run:
 
 ```sh
-docker-compose exec web python manage.py createsuperuser
+docker compose exec web python manage.py createsuperuser
 ```
 
 and enter the requested details. Once the account has been created go to
