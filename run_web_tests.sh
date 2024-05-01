@@ -26,7 +26,7 @@ else
   echo "Running tests using an existing environment file..."
 fi
 
-if [[ -z $(docker-compose ps --quiet --filter status=running $DJANGO_SERVICE_NAME) ]]; then
+if [[ -z $(docker compose ps --quiet --filter status=running $DJANGO_SERVICE_NAME) ]]; then
   echo "Booting services."
   ./bin/boot.sh
   CLEAN_SERVICES=true
@@ -35,7 +35,7 @@ else
 fi
 
 echo "Executing web tests..."
-docker-compose exec $DJANGO_SERVICE_NAME sh -c "python manage.py test $@"
+docker compose exec $DJANGO_SERVICE_NAME sh -c "python manage.py test $@"
 
 # Clean up
 if [[ $CLEAN_SERVICES == true ]]; then

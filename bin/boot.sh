@@ -22,14 +22,14 @@ mkdir -p "$SOURCE_DIR/pgdata"
 # Start external network
 create_external_net
 # Build services
-docker-compose --project-name ${PROJECT_NAME} build
+docker compose --project-name ${PROJECT_NAME} build
 # Bring up the stack and detach
-docker-compose --project-name ${PROJECT_NAME} up --detach
+docker compose --project-name ${PROJECT_NAME} up --detach
 
 # Replace this loop with `--wait-timeout` when it is available
 # with 'docker compose' v2
 sleep_counter=0
-while [ $(docker-compose ps --quiet --filter status=running | wc -l | xargs) -ne 4 ]
+while [ $(docker compose ps --quiet --filter status=running | wc -l | xargs) -ne 4 ]
 do
   sleep 1
   let counter++

@@ -7,7 +7,7 @@ SOURCE_DIR=$(cd "$SCRIPTPATH" && cd .. && pwd -P)
 PROJECT_NAME=errorreports
 
 cd ${SOURCE_DIR}
-docker-compose down
+docker compose down
 
 # the web data volume shouldn't really be persistent as all of the files
 # come from an image
