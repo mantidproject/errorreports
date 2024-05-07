@@ -17,7 +17,7 @@ Email: $email
 Mantid version: $version
 OS: $os
 
-**Additionl Information**
+**Additional Information**
 $info
 
 **Stack trace**
@@ -30,7 +30,7 @@ Email: $email
 Mantid version: $version
 OS: $os
 
-**Additionl Information**
+**Additional Information**
 $info
 """)
 
@@ -48,7 +48,7 @@ def get_or_create_github_issue(report) -> GithubIssue | None:
        and they have not left any additional information
 
     Args:
-        report: The report recived by ErrorViewSet
+        report: The report recieved by ErrorViewSet
 
     Returns:
         GithubIssue | None: A reference to a new or existing GithubIssue table
@@ -108,7 +108,7 @@ def get_or_create_github_issue(report) -> GithubIssue | None:
 
 def _trim_stacktrace(stacktrace: str) -> str:
     """
-    Returns a rimmed and os non-specific version of the stacktrace given
+    Returns a trimmed and os non-specific version of the stacktrace given
     """
     return '\n'.join([_stacktrace_line_trimer(line) for line in
                       stacktrace.split('\n')])
