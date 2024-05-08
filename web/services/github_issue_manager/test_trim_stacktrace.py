@@ -11,9 +11,6 @@ class TrimStacktraceTest(unittest.TestCase):
                       'KeyboardInterrupt'
         self.assertNotIn(username, _trim_stacktrace(test_trace))
 
-    def test_result_is_independant_of_path_style(self):
-        pass
-
     def test_line_trimmer_file_lines(self):
         examples = {
             r'File "C:\MantidInstall\bin\lib\site-packages\mantidqtinterfaces\Muon\GUI\Common\thread_model.py", line 98, in warning':

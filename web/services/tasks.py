@@ -4,7 +4,7 @@ import logging
 from string import Template
 
 logger = logging.getLogger('NotificationLogger')
-slack_message = Template("""
+SLACK_MESSAGE = Template("""
 Name: $name Email: $email
 Additional text:
 $add_text
@@ -35,7 +35,7 @@ def send_notification_to_slack(name,
     slack_webhook_url = settings.SLACK_WEBHOOK_URL
     if not slack_webhook_url:
         return
-    text = slack_message.substitute(
+    text = SLACK_MESSAGE.substitute(
         name=_string_or_empty_field(name),
         email=_string_or_empty_field(name),
         add_text=_string_or_empty_field(additional_text),

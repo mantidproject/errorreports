@@ -10,7 +10,7 @@ from github import Github, Auth
 logger = logging.getLogger()
 line_exp = re.compile(r"\s*File \".*(mantidqt|mantidqtinterfaces|"
                       r"workbench|scripts)(\/|\\)(.*)(\", line \d+, in \S+)")
-issue_text_template = Template("""
+ISSUE_TEXT = Template("""
 Name: $name
 Email: $email
 
@@ -23,7 +23,7 @@ $info
 **Stack trace**
 ```$stacktrace```
 """)
-comment_text_template = Template("""
+COMMENT_TEXT = Template("""
 Name: $name
 Email: $email
 
@@ -77,7 +77,7 @@ def get_or_create_github_issue(report) -> GithubIssue | None:
            not report['textBox']):
             return github_issue
 
-        comment_text = comment_text_template.substitute(
+        comment_text = COMMENT_TEXT.substitute(
             name=report['name'],
             email=report['email'],
             os=report['osReadable'],
@@ -89,7 +89,7 @@ def get_or_create_github_issue(report) -> GithubIssue | None:
         logger.info(f'Added comment to issue {issue.url})')
         return github_issue
     else:
-        issue_text = issue_text_template.substitute(
+        issue_text = ISSUE_TEXT.substitute(
             name=report['name'],
             email=report['email'],
             os=report['osReadable'],
@@ -152,8 +152,5 @@ def _search_for_repeat_user(uid: str, github_issue: GithubIssue) -> bool:
     """
     Return true if the user id has already submitted the same error
     """
-    for entry_uid in ErrorReport.objects.filter(
-            githubIssue=github_issue).values_list('uid'):
-        if uid == entry_uid:
-            return True
-    return False
+    return any([uid == entry_uid for entry_uid in ErrorReport.objects.filter(
+                githubIssue=github_issue).values_list('uid')])
