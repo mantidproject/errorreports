@@ -20,7 +20,11 @@ class TrimStacktraceTest(unittest.TestCase):
             r'File "D:\Mantid\Software\MantidInstall\bin\lib\site-packages\mantidqt\widgets\codeeditor\execution.py", line 153, in execute':
             r'mantidqt/widgets/codeeditor/execution.py", line 153, in execute',
             r'File "/opt/mantidworkbenchnightly/scripts/ExternalInterfaces/mslice/presenters/workspace_manager_presenter.py", line 112, in _save_to_ads':
-            r'scripts/ExternalInterfaces/mslice/presenters/workspace_manager_presenter.py", line 112, in _save_to_ads'
+            r'scripts/ExternalInterfaces/mslice/presenters/workspace_manager_presenter.py", line 112, in _save_to_ads',
+            r"at line 152 in '/usr/local/anaconda/envs/mantid-dev/plugins/python/algorithms/ConvertWANDSCDtoQ.py'":
+            r'at line 152 in plugins/python/algorithms/ConvertWANDSCDtoQ.py',
+            r'File "/opt/mantidworkbench6.9/lib/python3.10/site-packages/mantid/simpleapi.py", line 1083, in __call__':
+            r'mantid/simpleapi.py", line 1083, in __call__'
         }
         for original, expected_trim in examples.items():
             self.assertEqual(_stacktrace_line_trimer(original), expected_trim)

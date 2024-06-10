@@ -8,8 +8,12 @@ from string import Template
 from github import Github, Auth
 
 logger = logging.getLogger()
-line_exp = re.compile(r"\s*File \".*(mantidqt|mantidqtinterfaces|"
-                      r"workbench|scripts)(\/|\\)(.*)(\", line \d+, in \S+)")
+line_exp = re.compile(r"\s*File \".*(mantid|mantidqt|mantidqtinterfaces|"
+                      r"workbench|scripts|plugins)"
+                      r"(\/|\\)(.*)(\", line \d+, in \S+)")
+alt_line_exp = re.compile(r"\s*(at line \d+ in )\'.*(mantid|mantidqt|"
+                          r"mantidqtinterfaces|workbench|scripts|plugins)"
+                          r"(\/|\\)(.*)\'")
 ISSUE_TEXT = Template("""
 Name: $name
 Email: $email
@@ -124,6 +128,14 @@ def _stacktrace_line_trimer(line: str) -> str:
             os.path.normpath("".join(match.group(1, 2, 3)))
         )
         return path.as_posix() + match.group(4)
+
+    match = alt_line_exp.match(line)
+    if match:
+        path = pathlib.PureWindowsPath(
+            os.path.normpath("".join(match.groups(2, 3, 4)))
+        )
+        return match.group(1) + path.as_posix()
+
     return line
 
 
