@@ -46,6 +46,10 @@ class ErrorReport(models.Model):
                                default="",
                                null="True")
     stacktrace = models.CharField(max_length=10000, default="")
+    githubIssue = models.ForeignKey('GithubIssue',
+                                    on_delete=models.SET_NULL,
+                                    blank=True,
+                                    null=True)
 
     def removePIIData(reports):
         # Delete identifiable parts of chosen reports
@@ -71,6 +75,15 @@ class UserDetails(models.Model):
         no_refs = UserDetails.objects.annotate(
             num_refs=models.Count('errorreport')).filter(num_refs=0)
         no_refs.delete()
+
+
+class GithubIssue(models.Model):
+    repoName = models.CharField(max_length=200,
+                                default="",
+                                blank=True,
+                                help_text="'user/repo_name': for example "
+                                          "'mantidproject/mantid'")
+    issueNumber = models.CharField(max_length=16, default="", blank=True)
 
 
 def notify_report_received(sender, instance, signal, *args, **kwargs):
@@ -107,6 +120,10 @@ def notify_report_received(sender, instance, signal, *args, **kwargs):
          and textBox in TEST_VALUES)):
         return
 
+    if instance.githubIssue:
+        issue_link = (f"https://github.com/{instance.githubIssue.repoName}"
+                      f"/issues/{instance.githubIssue.issueNumber}")
+
     notification_thread = threading.Thread(
         target=send_notification_to_slack, args=(name,
                                                  email,
@@ -114,7 +131,8 @@ def notify_report_received(sender, instance, signal, *args, **kwargs):
                                                  instance.stacktrace,
                                                  instance.application,
                                                  instance.mantidVersion,
-                                                 instance.osReadable))
+                                                 instance.osReadable,
+                                                 issue_link))
     notification_thread.start()
 
 
