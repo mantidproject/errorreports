@@ -13,6 +13,6 @@ SOURCE_DIR=$(cd "$SCRIPTPATH" && cd .. && pwd -P)
 source ${SOURCE_DIR}/.env
 
 PROJECT_NAME=errorreports
-PG_DOCKER_NAME=$PROJECT_NAME"_postgres_1"
+PG_DOCKER_NAME=$PROJECT_NAME"-postgres-1"
 
 docker exec -t $PG_DOCKER_NAME pg_dumpall -c -U ${DB_USER} | gzip > $1
