@@ -9,7 +9,7 @@ Name: $name Email: $email
 Additional text:
 $add_text
 Stack Trace:
-$stacktrace
+```$stacktrace```
 Using: $application $version on $os
 $issue_link
 """)

@@ -95,13 +95,13 @@ class GithubIssue(models.Model):
 
 def extract_mantid_code_threads_from_cpp_traces(compressed_cpp_traces: str):
     cpp_traces_from_pystack = zlib.decompress(base64.standard_b64decode(compressed_cpp_traces)).decode("utf-8")
-    return ["Traceback for " + trace_back for trace_back in re.split(r'\n\nTraceback for ', cpp_traces_from_pystack) if 
+    return ["Traceback for " + trace_back for trace_back in re.split(r'\nTraceback for ', cpp_traces_from_pystack)[1:] if 
             search_for_mantid_codein_trace(trace_back)]
 
 
 def search_for_mantid_codein_trace(trace_back: str) -> bool:
-    cpp_mantid_code = re.search(r"^\s*\(C\) File \".*(mantid|mantidqt|mantidqtinterfaces|workbench|scripts|plugins).*$", trace_back, re.MULTILINE) is not None
-    python_mantid_code = re.search(r"^\s*\(Python\) File \".*(mantid|mantidqt|mantidqtinterfaces|workbench|scripts|plugins).*$", trace_back, re.MULTILINE) is not None
+    cpp_mantid_code = re.search(r"^\s*\(C\) File \".*/(mantid|mantidqt|mantidqtinterfaces|workbench|scripts|plugins)/.*$", trace_back, re.MULTILINE) is not None
+    python_mantid_code = re.search(r"^\s*\(Python\) File \".*/(mantid|mantidqt|mantidqtinterfaces|workbench|scripts|plugins)/.*$", trace_back, re.MULTILINE) is not None
     return cpp_mantid_code or python_mantid_code
 
 
