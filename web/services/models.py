@@ -4,7 +4,13 @@ from django.core.files.storage import FileSystemStorage
 from django.db.models import signals
 from services.tasks import send_notification_to_slack
 from services.constants import input_box_max_length, free_text_max_length
+import base64
+import logging
+import re
 import threading
+import zlib
+
+logger = logging.getLogger("Error report model")
 # Implements saving recovery files to disk
 FILE_SYSTEM_STORE = FileSystemStorage(location=settings.MEDIA_ROOT)
 
@@ -24,7 +30,7 @@ class ErrorReport(models.Model):
     # ex: "3.17.4-200.fc20.x86_64"
     osVersion = models.CharField(max_length=32)
     ParaView = models.CharField(max_length=16)  # ex: "3.98.1"
-    mantidVersion = models.CharField(max_length=32)  # ex: "3.2.20141208.1820"
+    mantidVersion = models.CharField(max_length=64)  # ex: "3.2.20141208.1820"
     # sha1 ex: "e9423bdb34b07213a69caa90913e40307c17c6cc"
     mantidSha1 = models.CharField(max_length=40,
                                   help_text="sha1 for specific mantid version")
@@ -46,6 +52,7 @@ class ErrorReport(models.Model):
                                default="",
                                null="True")
     stacktrace = models.CharField(max_length=10000, default="")
+    cppCompressedTraces = models.CharField(max_length=10000, default="", blank=True)
     githubIssue = models.ForeignKey('GithubIssue',
                                     on_delete=models.SET_NULL,
                                     blank=True,
@@ -86,6 +93,18 @@ class GithubIssue(models.Model):
     issueNumber = models.CharField(max_length=16, default="", blank=True)
 
 
+def extract_mantid_code_threads_from_cpp_traces(compressed_cpp_traces: str):
+    cpp_traces_from_pystack = zlib.decompress(base64.standard_b64decode(compressed_cpp_traces)).decode("utf-8")
+    return ["Traceback for " + trace_back for trace_back in re.split(r'\n\nTraceback for ', cpp_traces_from_pystack) if 
+            search_for_mantid_codein_trace(trace_back)]
+
+
+def search_for_mantid_codein_trace(trace_back: str) -> bool:
+    cpp_mantid_code = re.search(r"^\s*\(C\) File \".*(mantid|mantidqt|mantidqtinterfaces|workbench|scripts|plugins).*$", trace_back, re.MULTILINE) is not None
+    python_mantid_code = re.search(r"^\s*\(Python\) File \".*(mantid|mantidqt|mantidqtinterfaces|workbench|scripts|plugins).*$", trace_back, re.MULTILINE) is not None
+    return cpp_mantid_code or python_mantid_code
+
+
 def notify_report_received(sender, instance, signal, *args, **kwargs):
     """
     Send a notification to the defined endpoint when a new error
@@ -98,6 +117,9 @@ def notify_report_received(sender, instance, signal, *args, **kwargs):
     """
     textBox = instance.textBox
     stacktrace = instance.stacktrace
+
+    if instance.cppCompressedTraces != "":
+        stacktrace = "\n\n".join(extract_mantid_code_threads_from_cpp_traces(instance.cppCompressedTraces))
 
     if instance.user is None:
 
@@ -120,6 +142,7 @@ def notify_report_received(sender, instance, signal, *args, **kwargs):
          and textBox in TEST_VALUES)):
         return
 
+    issue_link = ""
     if instance.githubIssue:
         issue_link = (f"https://github.com/{instance.githubIssue.repoName}"
                       f"/issues/{instance.githubIssue.issueNumber}")
@@ -128,7 +151,7 @@ def notify_report_received(sender, instance, signal, *args, **kwargs):
         target=send_notification_to_slack, args=(name,
                                                  email,
                                                  instance.textBox,
-                                                 instance.stacktrace,
+                                                 stacktrace,
                                                  instance.application,
                                                  instance.mantidVersion,
                                                  instance.osReadable,

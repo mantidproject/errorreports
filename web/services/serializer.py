@@ -13,4 +13,5 @@ class ErrorSerializer(serializers.HyperlinkedModelSerializer):
         fields = ['osReadable', 'application', 'url', 'uid',
                   'host', 'dateTime', 'osName', 'osArch', 'osVersion',
                   'ParaView', 'mantidVersion', 'mantidSha1', 'facility',
-                  'exitCode', 'upTime']
+                  'exitCode', 'upTime', 'textBox', 'stacktrace', 'cppCompressedTraces'
+                  'name', 'email']  

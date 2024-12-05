@@ -102,6 +102,7 @@ def saveErrorReport(report):
     exitCode = report["exitCode"]
     textBox = report["textBox"] if "textBox" in report else ""
     stacktrace = report["stacktrace"] if "stacktrace" in report else ""
+    cppCompressedTraces = report["cppCompressedTraces"] if "cppCompressedTraces" in report else ""
 
     if "name" in report and "email" in report:
         name = report["name"]
@@ -136,6 +137,7 @@ def saveErrorReport(report):
                                           user=user,
                                           textBox=textBox,
                                           stacktrace=stacktrace,
+                                          cppCompressedTraces=cppCompressedTraces,
                                           githubIssue=github_issue)
     if not created:
         obj.save()
