@@ -1,4 +1,4 @@
-from services.github_issue_manager.github_issue_manager import _trim_stacktrace, _stacktrace_line_trimer
+from services.utils.github_issue_manager import _trim_stacktrace, _stacktrace_line_trimer
 import unittest
 
 

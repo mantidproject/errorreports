@@ -4,11 +4,10 @@ from django.core.files.storage import FileSystemStorage
 from django.db.models import signals
 from services.tasks import send_notification_to_slack
 from services.constants import input_box_max_length, free_text_max_length
-import base64
+from services.utils.handel_compressed_cpp_traces import extract_mantid_code_threads_from_cpp_traces
 import logging
-import re
 import threading
-import zlib
+
 
 logger = logging.getLogger("Error report model")
 # Implements saving recovery files to disk
@@ -91,18 +90,6 @@ class GithubIssue(models.Model):
                                 help_text="'user/repo_name': for example "
                                           "'mantidproject/mantid'")
     issueNumber = models.CharField(max_length=16, default="", blank=True)
-
-
-def extract_mantid_code_threads_from_cpp_traces(compressed_cpp_traces: str):
-    cpp_traces_from_pystack = zlib.decompress(base64.standard_b64decode(compressed_cpp_traces)).decode("utf-8")
-    return ["Traceback for " + trace_back for trace_back in re.split(r'\nTraceback for ', cpp_traces_from_pystack)[1:] if 
-            search_for_mantid_codein_trace(trace_back)]
-
-
-def search_for_mantid_codein_trace(trace_back: str) -> bool:
-    cpp_mantid_code = re.search(r"^\s*\(C\) File \".*/(mantid|mantidqt|mantidqtinterfaces|workbench|scripts|plugins)/.*$", trace_back, re.MULTILINE) is not None
-    python_mantid_code = re.search(r"^\s*\(Python\) File \".*/(mantid|mantidqt|mantidqtinterfaces|workbench|scripts|plugins)/.*$", trace_back, re.MULTILINE) is not None
-    return cpp_mantid_code or python_mantid_code
 
 
 def notify_report_received(sender, instance, signal, *args, **kwargs):

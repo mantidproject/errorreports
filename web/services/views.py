@@ -1,5 +1,5 @@
 from services.models import ErrorReport, UserDetails
-from services.github_issue_manager.github_issue_manager import (
+from services.utils.github_issue_manager import (
     get_or_create_github_issue
 )
 from services.constants import input_box_max_length
