@@ -4,7 +4,9 @@ from django.core.files.storage import FileSystemStorage
 from django.db.models import signals
 from services.tasks import send_notification_to_slack
 from services.constants import input_box_max_length, free_text_max_length
-from services.utils.handel_compressed_cpp_traces import extract_mantid_code_threads_from_cpp_traces
+from services.utils.handel_compressed_cpp_traces import (
+    extract_mantid_code_threads_from_cpp_traces
+)
 import logging
 import threading
 
@@ -51,7 +53,8 @@ class ErrorReport(models.Model):
                                default="",
                                null="True")
     stacktrace = models.CharField(max_length=10000, default="")
-    cppCompressedTraces = models.CharField(max_length=10000, default="", blank=True)
+    cppCompressedTraces = models.CharField(max_length=10000, default="",
+                                           blank=True)
     githubIssue = models.ForeignKey('GithubIssue',
                                     on_delete=models.SET_NULL,
                                     blank=True,
@@ -106,7 +109,8 @@ def notify_report_received(sender, instance, signal, *args, **kwargs):
     stacktrace = instance.stacktrace
 
     if instance.cppCompressedTraces != "":
-        stacktrace = "\n\n".join(extract_mantid_code_threads_from_cpp_traces(instance.cppCompressedTraces))
+        stacktrace = "\n\n".join(extract_mantid_code_threads_from_cpp_traces(
+                                 instance.cppCompressedTraces))
 
     if instance.user is None:
 

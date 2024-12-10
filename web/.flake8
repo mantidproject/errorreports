@@ -2,6 +2,6 @@
 
 exclude =
     services/migrations,
-    services/github_issue_manager/test_search_for_matching_stacktrace.py,
-    services/github_issue_manager/test_trim_stacktrace.py,
+    services/utils/test_search_for_matching_stacktrace.py,
+    services/utils/test_trim_stacktrace.py,
 

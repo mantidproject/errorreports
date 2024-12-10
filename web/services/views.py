@@ -102,7 +102,8 @@ def saveErrorReport(report):
     exitCode = report["exitCode"]
     textBox = report["textBox"] if "textBox" in report else ""
     stacktrace = report["stacktrace"] if "stacktrace" in report else ""
-    cppCompressedTraces = report["cppCompressedTraces"] if "cppCompressedTraces" in report else ""
+    cppCompressedTraces = report["cppCompressedTraces"] \
+        if "cppCompressedTraces" in report else ""
 
     if "name" in report and "email" in report:
         name = report["name"]
@@ -120,25 +121,26 @@ def saveErrorReport(report):
 
     github_issue = get_or_create_github_issue(report)
 
-    obj, created = \
-        ErrorReport.objects.get_or_create(osReadable=osReadable,
-                                          application=application,
-                                          uid=uid, host=host,
-                                          dateTime=dateTime,
-                                          osName=osName,
-                                          osArch=osArch,
-                                          osVersion=osVersion,
-                                          ParaView=ParaView,
-                                          mantidVersion=mantidVersion,
-                                          mantidSha1=mantidSha1,
-                                          facility=facility,
-                                          upTime=upTime,
-                                          exitCode=exitCode,
-                                          user=user,
-                                          textBox=textBox,
-                                          stacktrace=stacktrace,
-                                          cppCompressedTraces=cppCompressedTraces,
-                                          githubIssue=github_issue)
+    obj, created = ErrorReport.objects.get_or_create(
+        osReadable=osReadable,
+        application=application,
+        uid=uid, host=host,
+        dateTime=dateTime,
+        osName=osName,
+        osArch=osArch,
+        osVersion=osVersion,
+        ParaView=ParaView,
+        mantidVersion=mantidVersion,
+        mantidSha1=mantidSha1,
+        facility=facility,
+        upTime=upTime,
+        exitCode=exitCode,
+        user=user,
+        textBox=textBox,
+        stacktrace=stacktrace,
+        cppCompressedTraces=cppCompressedTraces,
+        githubIssue=github_issue
+    )
     if not created:
         obj.save()
 

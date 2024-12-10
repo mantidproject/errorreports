@@ -1,5 +1,7 @@
 from services.models import ErrorReport, GithubIssue
-from services.utils.handel_compressed_cpp_traces import extract_mantid_code_threads_from_cpp_traces
+from services.utils.handel_compressed_cpp_traces import (
+    extract_mantid_code_threads_from_cpp_traces
+)
 
 import re
 import pathlib
@@ -62,7 +64,7 @@ def get_or_create_github_issue(report) -> GithubIssue | None:
     stacktrace = report.get('stacktrace')
     text_box = report.get('textBox')
     cpp_compressed_traces = report.get('cppCompressedTraces')
-    if stacktrace is None and text_box is None and cpp_compressed_traces is None:
+    if not any([stacktrace, text_box, cpp_compressed_traces]):
         logger.info('No stacktrace or info in the report; skipping github'
                     ' issue interaction')
         return None
@@ -99,7 +101,8 @@ def get_or_create_github_issue(report) -> GithubIssue | None:
     else:
         trace = stacktrace
         if cpp_compressed_traces:
-            trace = "\n\n".join(extract_mantid_code_threads_from_cpp_traces(cpp_compressed_traces))
+            trace = "\n\n".join(extract_mantid_code_threads_from_cpp_traces(
+                                cpp_compressed_traces))
 
         issue_text = ISSUE_TEXT.substitute(
             name=report['name'],
