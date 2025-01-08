@@ -37,7 +37,7 @@ def send_notification_to_slack(name,
         return
     text = SLACK_MESSAGE.substitute(
         name=_string_or_empty_field(name),
-        email=_string_or_empty_field(name),
+        email=_string_or_empty_field(email),
         add_text=_string_or_empty_field(additional_text),
         stacktrace=_string_or_empty_field(stacktrace),
         application=_string_or_empty_field(application),
