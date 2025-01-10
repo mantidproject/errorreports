@@ -7,11 +7,9 @@ from services.constants import input_box_max_length, free_text_max_length
 from services.utils.handel_compressed_cpp_traces import (
     extract_mantid_code_threads_from_cpp_traces
 )
-import logging
 import threading
 
 
-logger = logging.getLogger("Error report model")
 # Implements saving recovery files to disk
 FILE_SYSTEM_STORE = FileSystemStorage(location=settings.MEDIA_ROOT)
 
