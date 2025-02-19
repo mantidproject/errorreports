@@ -15,8 +15,11 @@ def extract_mantid_code_threads_from_cpp_traces(compressed_cpp_traces: str):
     if len(traces > 1):
         # Trim boilerplate output
         traces = traces[1:]
-    return ["Traceback for " + trace_back for trace_back in
-            traces if _search_for_mantid_codein_trace(trace_back)]
+    filtered_traces = ["Traceback for " + trace_back for trace_back in
+                       traces if _search_for_mantid_codein_trace(trace_back)]
+    # On built versions we might not get the file paths so the filter will find
+    # nothing, in this case just reurn everything.
+    return filtered_traces if filtered_traces != [] else traces
 
 
 def _search_for_mantid_codein_trace(trace_back: str) -> bool:
