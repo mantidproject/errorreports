@@ -143,7 +143,7 @@ def _stacktrace_line_trimer(line: str) -> str:
     match = alt_line_exp.match(line)
     if match:
         path = pathlib.PureWindowsPath(
-            os.path.normpath("".join(match.groups(2, 3, 4)))
+            os.path.normpath("".join(match.group(2, 3, 4)))
         )
         return match.group(1) + path.as_posix()
 
