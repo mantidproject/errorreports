@@ -24,7 +24,7 @@ from services.constants import (
     repoName_max_length,
     issueNumber_max_length
 )
-from web.services.utils.decompress_cpp_traces import decompress_cpp_traces
+from services.utils.decompress_cpp_traces import decompress_cpp_traces
 import threading
 
 

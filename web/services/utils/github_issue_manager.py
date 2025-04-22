@@ -1,5 +1,5 @@
 from services.models import ErrorReport, GithubIssue
-from web.services.utils.decompress_cpp_traces import decompress_cpp_traces
+from services.utils.decompress_cpp_traces import decompress_cpp_traces
 
 import re
 import pathlib
