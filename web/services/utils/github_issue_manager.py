@@ -1,7 +1,5 @@
 from services.models import ErrorReport, GithubIssue
-from services.utils.handel_compressed_cpp_traces import (
-    extract_mantid_code_threads_from_cpp_traces
-)
+from web.services.utils.decompress_cpp_traces import decompress_cpp_traces
 
 import re
 import pathlib
@@ -101,8 +99,7 @@ def get_or_create_github_issue(report) -> GithubIssue | None:
     else:
         trace = stacktrace
         if cpp_compressed_traces:
-            trace = "\n\n".join(extract_mantid_code_threads_from_cpp_traces(
-                                cpp_compressed_traces))
+            trace = decompress_cpp_traces(cpp_compressed_traces)
 
         issue_text = ISSUE_TEXT.substitute(
             name=report['name'],

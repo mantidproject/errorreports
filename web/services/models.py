@@ -24,9 +24,7 @@ from services.constants import (
     repoName_max_length,
     issueNumber_max_length
 )
-from services.utils.handel_compressed_cpp_traces import (
-    extract_mantid_code_threads_from_cpp_traces
-)
+from web.services.utils.decompress_cpp_traces import decompress_cpp_traces
 import threading
 
 
@@ -136,8 +134,7 @@ def notify_report_received(sender, instance, signal, *args, **kwargs):
     stacktrace = instance.stacktrace
 
     if instance.cppCompressedTraces != "":
-        stacktrace = "\n\n".join(extract_mantid_code_threads_from_cpp_traces(
-                                 instance.cppCompressedTraces))
+        stacktrace = decompress_cpp_traces(instance.cppCompressedTraces)
 
     if instance.user is None:
 

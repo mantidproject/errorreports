@@ -1,9 +1,0 @@
-Traceback for thread 570 [] (most recent call last):
-    (Python) File "/test.py", line 19, in <module>
-        first_func({1: None}, [1,2,3])
-    (Python) File "/test.py", line 7, in first_func
-        second_func(x, y)
-    (Python) File "/test.py", line 12, in second_func
-        third_func(x, y)
-    (Python) File "/test.py", line 16, in third_func
-        time.sleep(1000)
