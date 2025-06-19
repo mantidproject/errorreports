@@ -1,6 +1,6 @@
 from django.test import TestCase
 from services.models import ErrorReport, GithubIssue
-from services.github_issue_manager.github_issue_manager import _search_for_matching_stacktrace
+from services.utils.github_issue_manager import _search_for_matching_stacktrace
 
 
 class MatchingStackTraceSearchTest(TestCase):

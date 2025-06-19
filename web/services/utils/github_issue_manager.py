@@ -1,4 +1,5 @@
 from services.models import ErrorReport, GithubIssue
+from services.utils.decompress_cpp_traces import decompress_cpp_traces
 
 import re
 import pathlib
@@ -58,7 +59,10 @@ def get_or_create_github_issue(report) -> GithubIssue | None:
         GithubIssue | None: A reference to a new or existing GithubIssue table
         entry, or None
     """
-    if not report.get('stacktrace') and not report.get('textBox'):
+    stacktrace = report.get('stacktrace')
+    text_box = report.get('textBox')
+    cpp_compressed_traces = report.get('cppCompressedTraces')
+    if not any([stacktrace, text_box, cpp_compressed_traces]):
         logger.info('No stacktrace or info in the report; skipping github'
                     ' issue interaction')
         return None
@@ -74,7 +78,7 @@ def get_or_create_github_issue(report) -> GithubIssue | None:
     g = Github(auth=auth)
     repo = g.get_repo(issue_repo)
 
-    github_issue = _search_for_matching_stacktrace(report["stacktrace"])
+    github_issue = _search_for_matching_stacktrace(stacktrace)
     if github_issue and issue_repo == github_issue.repoName:
         issue_number = github_issue.issueNumber
         if (_search_for_repeat_user(report['uid'], github_issue) and
@@ -93,13 +97,17 @@ def get_or_create_github_issue(report) -> GithubIssue | None:
         logger.info(f'Added comment to issue {issue.url})')
         return github_issue
     else:
+        trace = stacktrace
+        if cpp_compressed_traces:
+            trace = decompress_cpp_traces(cpp_compressed_traces)
+
         issue_text = ISSUE_TEXT.substitute(
             name=report['name'],
             email=report['email'],
             os=report['osReadable'],
             version=report['mantidVersion'],
             info=report['textBox'],
-            stacktrace=report['stacktrace']
+            stacktrace=trace
         )
         error_report_label = repo.get_label("Error Report")
         issue = repo.create_issue(title="Automatic error report",
@@ -132,7 +140,7 @@ def _stacktrace_line_trimer(line: str) -> str:
     match = alt_line_exp.match(line)
     if match:
         path = pathlib.PureWindowsPath(
-            os.path.normpath("".join(match.groups(2, 3, 4)))
+            os.path.normpath("".join(match.group(2, 3, 4)))
         )
         return match.group(1) + path.as_posix()
 

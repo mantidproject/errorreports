@@ -8,10 +8,9 @@ SLACK_MESSAGE = Template("""
 Name: $name Email: $email
 Additional text:
 $add_text
-Stack Trace:
-$stacktrace
 Using: $application $version on $os
-$issue_link
+Issue link: $issue_link
+Stack Trace:
 """)
 
 
@@ -37,20 +36,27 @@ def send_notification_to_slack(name,
         return
     text = SLACK_MESSAGE.substitute(
         name=_string_or_empty_field(name),
-        email=_string_or_empty_field(name),
+        email=_string_or_empty_field(email),
         add_text=_string_or_empty_field(additional_text),
-        stacktrace=_string_or_empty_field(stacktrace),
         application=_string_or_empty_field(application),
         version=_string_or_empty_field(version),
         os=_string_or_empty_field(os),
-        issue_link=_string_or_empty_field(github_issue_link)
+        issue_link=github_issue_link
     )
+    stacktrace_text = f"```{_string_or_empty_field(stacktrace)}```"
     requests.post(slack_webhook_url,
                   json={
                       'channel': settings.SLACK_ERROR_REPORTS_CHANNEL,
                       'username': settings.SLACK_ERROR_REPORTS_USERNAME,
                       'text': text,
-                      'icon_emoji': settings.SLACK_ERROR_REPORTS_EMOJI
+                      'icon_emoji': settings.SLACK_ERROR_REPORTS_EMOJI,
+                      'attachments':
+                      [
+                          {
+                              'mrkdwn_in': ['text'],
+                              'text': stacktrace_text
+                          }
+                      ]
                   })
 
 
