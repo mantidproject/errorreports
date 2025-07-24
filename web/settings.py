@@ -191,3 +191,7 @@ SLACK_ERROR_REPORTS_EMOJI = os.getenv('SLACK_ERROR_REPORTS_EMOJI',
                                       ':sadmantid:')
 SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT = os.getenv(
     'SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT', 'Not provided')
+
+
+#CSRF validation settings
+CSRF_TRUSTED_ORIGINS = ['https://*.mantidproject.org','https://*.127.0.0.1','https://*.a.staging-mantidproject.stfc.ac.uk']
