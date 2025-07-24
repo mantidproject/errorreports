@@ -194,4 +194,8 @@ SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT = os.getenv(
 
 
 #CSRF validation settings
-CSRF_TRUSTED_ORIGINS = ['https://errorreports.mantidproject.org','https://*.127.0.0.1','https://errorreports.a.staging-mantidproject.stfc.ac.uk']
+CSRF_TRUSTED_ORIGINS = [
+    'https://errorreports.mantidproject.org',
+    'http://localhost:8083',
+    'https://errorreports.a.staging-mantidproject.stfc.ac.uk'
+    ]
