@@ -247,6 +247,3 @@ makemigrations.py:105: RuntimeWarning: Got an error checking a consistent migrat
 
 This is expected as the app has not been initialized yet so the DB does not
 exist. The script will continue as expected.
-
-
-### 
