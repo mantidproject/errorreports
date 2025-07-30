@@ -140,6 +140,10 @@ such as
 * the port to run on
 * the name of the database user
 * the database password
+* the trusted CSRF origin URLs (`DJANGO_CSRF_TRUSTED_ORIGINS`):
+   - For local developer testing: `http://localhost:<HOST_PORT>`
+   - For the Staging A environment: `https://errorreports.a.staging-mantidproject.stfc.ac.uk`
+   - For production: `https://errorreports.mantidproject.org`
 * the trusted CSRF origin URLs as appropriate. For developer testing set either http://localhost:8083 or https://errorreports.a.staging-mantidproject.stfc.ac.uk if testing on staging environment. But for the production usage only set this to https://errorreports.mantidproject.org
 * Slack webhook URL
 * the deployment mode via DEBUG. Note: please remove this variable for the production usage.
