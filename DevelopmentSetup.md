@@ -147,7 +147,7 @@ such as
    - For the Staging A environment: `https://errorreports.a.staging-mantidproject.stfc.ac.uk`
    - For production: `https://errorreports.mantidproject.org`
 * `DEBUG` - the deployment mode, Note: please remove this variable for the production usage.
-* The featuer to automatically creating issue from error reports is not currently in use, therefore keep the values for those varibles empty as below
+* The feature to automatically create issues from error reports is not currently in use. Therefore, keep the values of those variables empty, as shown below
    - GIT_AUTH_TOKEN=
    - GIT_ISSUE_REPO=
 
