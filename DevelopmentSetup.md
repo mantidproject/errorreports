@@ -137,16 +137,19 @@ Clone this repository locally:
 The docker compose configuration requires setting some environment variables
 such as
 
-* the port to run on
-* the name of the database user
-* the database password
-* the trusted CSRF origin URLs (`DJANGO_CSRF_TRUSTED_ORIGINS`):
+* `HOST_PORT` - the port to run on
+* `SECRET_KEY` - Django secret key
+* `DB_USER` - the name of the database user
+* `DB_PASS` - the database password
+* `SLACK_WEBHOOK_URL` - Slack webhook URL from Slack settings
+* `DJANGO_CSRF_TRUSTED_ORIGINS` - the trusted CSRF origin URLs:
    - For local developer testing: `http://localhost:<HOST_PORT>`
    - For the Staging A environment: `https://errorreports.a.staging-mantidproject.stfc.ac.uk`
    - For production: `https://errorreports.mantidproject.org`
-* the trusted CSRF origin URLs as appropriate. For developer testing set either http://localhost:8083 or https://errorreports.a.staging-mantidproject.stfc.ac.uk if testing on staging environment. But for the production usage only set this to https://errorreports.mantidproject.org
-* Slack webhook URL
-* the deployment mode via DEBUG. Note: please remove this variable for the production usage.
+* `DEBUG` - the deployment mode, Note: please remove this variable for the production usage.
+* The featuer to automatically creating issue from error reports is not currently in use, therefore keep the values for those varibles empty as below
+   - GIT_AUTH_TOKEN=
+   - GIT_ISSUE_REPO=
 
 In order to function correctly. Docker compose supports the de-facto standard
 method for setting initial environment variables: `.env files`.
