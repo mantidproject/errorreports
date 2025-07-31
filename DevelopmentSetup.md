@@ -137,11 +137,21 @@ Clone this repository locally:
 The docker compose configuration requires setting some environment variables
 such as
 
-* the port to run on
-* the name of the database user
-* the database password
+* `HOST_PORT` - the port to run on
+* `SECRET_KEY` - Django secret key
+* `DB_USER` - the name of the database user
+* `DB_PASS` - the database password
+* `SLACK_WEBHOOK_URL` - Slack webhook URL from Slack settings
+* `DJANGO_CSRF_TRUSTED_ORIGINS` - the trusted CSRF origin URLs:
+   - For local developer testing: `http://localhost:<HOST_PORT>`
+   - For the Staging A environment: `https://errorreports.a.staging-mantidproject.stfc.ac.uk`
+   - For production: `https://errorreports.mantidproject.org`
+* `DEBUG` - the deployment mode, Note: please remove this variable for the production usage.
+* The feature to automatically create issues from error reports is not currently in use. Therefore, keep the values of those variables empty, as shown below
+   - GIT_AUTH_TOKEN=
+   - GIT_ISSUE_REPO=
 
-in order to function correctly. Docker compose supports the de-facto standard
+In order to function correctly. Docker compose supports the de-facto standard
 method for setting initial environment variables: `.env files`.
 If a file called `.env` is present in the same directory as `docker-compose.yml`
 then this file is sourced and the variables contained within are exported to the
@@ -191,6 +201,19 @@ and enter the requested details. Once the account has been created go to
 
 If this step fails then see the section below on Shutdown the Server and remove postgres volume.
 
+## Adminer database management account
+
+To access the `Adminer` database management tool, access the below URL from your web browser `http://localhost:<HOST_PORT>/adminer` and use the `DB_USER` and `DB_PASS` configured in the `.env` file as the credentials. 
+
+If you prefer using the command line to access the postgres database from inside the docker container first enter into the docker container in the interactive mode as below. 
+```sh
+docker exec -it <container_name_or_id> bash
+```
+Then log into the postgres database using psql CLI tool as below
+```sh
+psql -U $DB_USER -d $DB_NAME
+```
+
 ## Shutdown the Server and remove postgres volume
 
 When finished with the server, from the root of your source directory, you can shut it down:
@@ -214,6 +237,8 @@ error message to help you debug the problem.
 
 An error about invalid credentials could be caused by persisting data from a previous
 time you have looked at this repo. To clear any persisting data, run the shutdown script.
+
+It is always recommended to check the logs of the started docker containers to observe any startup errors by running `docker logs <container_name_or_id>`
 
 ## Known issues
 

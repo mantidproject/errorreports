@@ -191,3 +191,7 @@ SLACK_ERROR_REPORTS_EMOJI = os.getenv('SLACK_ERROR_REPORTS_EMOJI',
                                       ':sadmantid:')
 SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT = os.getenv(
     'SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT', 'Not provided')
+
+
+# CSRF trusted origins
+CSRF_TRUSTED_ORIGINS = os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
