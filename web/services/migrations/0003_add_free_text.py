@@ -6,25 +6,24 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('services', '0002_added_contact_details'),
+        ("services", "0002_added_contact_details"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='errorreport',
-            name='textBox',
-            field=models.CharField(default='', max_length=3200, null='True'),
+            model_name="errorreport",
+            name="textBox",
+            field=models.CharField(default="", max_length=3200, null="True"),
         ),
         migrations.AlterField(
-            model_name='userdetails',
-            name='email',
-            field=models.CharField(help_text='user provided email', max_length=128),
+            model_name="userdetails",
+            name="email",
+            field=models.CharField(help_text="user provided email", max_length=128),
         ),
         migrations.AlterField(
-            model_name='userdetails',
-            name='name',
-            field=models.CharField(help_text='user provided name', max_length=128),
+            model_name="userdetails",
+            name="name",
+            field=models.CharField(help_text="user provided name", max_length=128),
         ),
     ]

@@ -4,4 +4,3 @@ exclude =
     services/migrations,
     services/utils/test_search_for_matching_stacktrace.py,
     services/utils/test_trim_stacktrace.py,
-

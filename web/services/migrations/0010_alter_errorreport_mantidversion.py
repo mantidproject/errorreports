@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('services', '0009_errorreport_cppcompressedtraces'),
+        ("services", "0009_errorreport_cppcompressedtraces"),
     ]
 
     operations = [
         migrations.AlterField(
-            model_name='errorreport',
-            name='mantidVersion',
+            model_name="errorreport",
+            name="mantidVersion",
             field=models.CharField(max_length=64),
         ),
     ]

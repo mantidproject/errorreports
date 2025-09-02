@@ -7,6 +7,6 @@ def decompress_cpp_traces(compressed_cpp_traces: str):
     Decompress the output from pystack core which is sent from the Mantid
     error reporter.
     """
-    return zlib.decompress(
-        base64.standard_b64decode(compressed_cpp_traces)
-    ).decode("utf-8")
+    return zlib.decompress(base64.standard_b64decode(compressed_cpp_traces)).decode(
+        "utf-8"
+    )
