@@ -10,7 +10,8 @@ class SlackHandler(logging.Handler):
         try:
             msg = self.format(record)
             notification_thread = threading.Thread(
-                target=send_logging_output_to_slack, args=(msg,))
+                target=send_logging_output_to_slack, args=(msg,)
+            )
             notification_thread.start()
         except Exception as e:
             # This logger is not Django logger so will

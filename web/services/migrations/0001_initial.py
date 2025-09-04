@@ -6,31 +6,58 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     initial = True
 
-    dependencies = [
-    ]
+    dependencies = []
 
     operations = [
         migrations.CreateModel(
-            name='ErrorReport',
+            name="ErrorReport",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('uid', models.CharField(help_text=b'md5 version of username', max_length=32)),
-                ('host', models.CharField(help_text=b'md5 version of hostname', max_length=32)),
-                ('dateTime', models.DateTimeField(db_index=True)),
-                ('osName', models.CharField(max_length=32)),
-                ('osArch', models.CharField(max_length=16)),
-                ('osVersion', models.CharField(max_length=32)),
-                ('ParaView', models.CharField(max_length=16)),
-                ('mantidVersion', models.CharField(max_length=32)),
-                ('mantidSha1', models.CharField(help_text=b'sha1 for specific mantid version', max_length=40)),
-                ('osReadable', models.CharField(blank=True, default=b'', max_length=80)),
-                ('application', models.CharField(blank=True, default=b'', max_length=80)),
-                ('facility', models.CharField(blank=True, default=b'', max_length=32)),
-                ('exitCode', models.CharField(default=b'', max_length=32, null=True)),
-                ('upTime', models.CharField(default=b'', max_length=32)),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "uid",
+                    models.CharField(
+                        help_text=b"md5 version of username", max_length=32
+                    ),
+                ),
+                (
+                    "host",
+                    models.CharField(
+                        help_text=b"md5 version of hostname", max_length=32
+                    ),
+                ),
+                ("dateTime", models.DateTimeField(db_index=True)),
+                ("osName", models.CharField(max_length=32)),
+                ("osArch", models.CharField(max_length=16)),
+                ("osVersion", models.CharField(max_length=32)),
+                ("ParaView", models.CharField(max_length=16)),
+                ("mantidVersion", models.CharField(max_length=32)),
+                (
+                    "mantidSha1",
+                    models.CharField(
+                        help_text=b"sha1 for specific mantid version", max_length=40
+                    ),
+                ),
+                (
+                    "osReadable",
+                    models.CharField(blank=True, default=b"", max_length=80),
+                ),
+                (
+                    "application",
+                    models.CharField(blank=True, default=b"", max_length=80),
+                ),
+                ("facility", models.CharField(blank=True, default=b"", max_length=32)),
+                ("exitCode", models.CharField(default=b"", max_length=32, null=True)),
+                ("upTime", models.CharField(default=b"", max_length=32)),
             ],
         ),
     ]

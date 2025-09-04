@@ -8,23 +8,49 @@ import django.db.models.deletion
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('services', '0003_add_free_text'),
+        ("services", "0003_add_free_text"),
     ]
 
     operations = [
         migrations.CreateModel(
-            name='RecoveryFiles',
+            name="RecoveryFiles",
             fields=[
-                ('id', models.AutoField(auto_created=True, primary_key=True, serialize=False, verbose_name='ID')),
-                ('fileHash', models.CharField(default='', help_text='md5 name of recovery file', max_length=32)),
-                ('fileStore', models.FileField(null=True, storage=django.core.files.storage.FileSystemStorage(location='/usr/src/app/recovery'), upload_to='')),
+                (
+                    "id",
+                    models.AutoField(
+                        auto_created=True,
+                        primary_key=True,
+                        serialize=False,
+                        verbose_name="ID",
+                    ),
+                ),
+                (
+                    "fileHash",
+                    models.CharField(
+                        default="", help_text="md5 name of recovery file", max_length=32
+                    ),
+                ),
+                (
+                    "fileStore",
+                    models.FileField(
+                        null=True,
+                        storage=django.core.files.storage.FileSystemStorage(
+                            location="/usr/src/app/recovery"
+                        ),
+                        upload_to="",
+                    ),
+                ),
             ],
         ),
         migrations.AddField(
-            model_name='errorreport',
-            name='recoveryFile',
-            field=models.ForeignKey(blank=True, null=True, on_delete=django.db.models.deletion.SET_NULL, to='services.RecoveryFiles'),
+            model_name="errorreport",
+            name="recoveryFile",
+            field=models.ForeignKey(
+                blank=True,
+                null=True,
+                on_delete=django.db.models.deletion.SET_NULL,
+                to="services.RecoveryFiles",
+            ),
         ),
     ]

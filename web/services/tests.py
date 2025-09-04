@@ -19,11 +19,11 @@ class ViewsTest(APITestCase):
             "mantidSha1": "f4af35836cf4e89250d7e0db356cd6e9356737db",
             "facility": "ISIS",
             "exitCode": "",
-            "upTime": "00:00:06.795771000"
+            "upTime": "00:00:06.795771000",
         }
 
-        url = '/api/error'
-        response = self.client.post(url, body, format='json', secure=True)
+        url = "/api/error"
+        response = self.client.post(url, body, format="json", secure=True)
 
         self.assertEqual(201, response.status_code)
 
@@ -45,11 +45,11 @@ class ViewsTest(APITestCase):
             "exitCode": "",
             "upTime": "00:00:06.795771000",
             "name": "",
-            "email": ""
+            "email": "",
         }
 
-        url = '/api/error'
-        response = self.client.post(url, body, format='json', secure=True)
+        url = "/api/error"
+        response = self.client.post(url, body, format="json", secure=True)
 
         self.assertEqual(201, response.status_code)
 
@@ -71,11 +71,11 @@ class ViewsTest(APITestCase):
             "exitCode": "",
             "upTime": "00:00:06.795771000",
             "name": "public",
-            "email": "public@email"
+            "email": "public@email",
         }
 
-        url = '/api/error'
-        response = self.client.post(url, body, format='json', secure=True)
+        url = "/api/error"
+        response = self.client.post(url, body, format="json", secure=True)
 
         self.assertEqual(201, response.status_code)
 
@@ -96,11 +96,11 @@ class ViewsTest(APITestCase):
             "facility": "ISIS",
             "exitCode": "",
             "upTime": "00:00:06.795771000",
-            "textBox": "Explanatory text"
+            "textBox": "Explanatory text",
         }
 
-        url = '/api/error'
-        response = self.client.post(url, body, format='json', secure=True)
+        url = "/api/error"
+        response = self.client.post(url, body, format="json", secure=True)
 
         self.assertEqual(201, response.status_code)
 
@@ -125,7 +125,7 @@ class ViewsTest(APITestCase):
             "stacktrace": "This is what went wrong",
         }
 
-        url = '/api/error'
-        response = self.client.post(url, body, format='json', secure=True)
+        url = "/api/error"
+        response = self.client.post(url, body, format="json", secure=True)
 
         self.assertEqual(201, response.status_code)

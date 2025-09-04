@@ -10,8 +10,25 @@ class ErrorSerializer(serializers.HyperlinkedModelSerializer):
     class Meta:
         model = ErrorReport
 
-        fields = ['osReadable', 'application', 'url', 'uid',
-                  'host', 'dateTime', 'osName', 'osArch', 'osVersion',
-                  'ParaView', 'mantidVersion', 'mantidSha1', 'facility',
-                  'exitCode', 'upTime', 'textBox', 'stacktrace',
-                  'cppCompressedTraces', 'name', 'email']
+        fields = [
+            "osReadable",
+            "application",
+            "url",
+            "uid",
+            "host",
+            "dateTime",
+            "osName",
+            "osArch",
+            "osVersion",
+            "ParaView",
+            "mantidVersion",
+            "mantidSha1",
+            "facility",
+            "exitCode",
+            "upTime",
+            "textBox",
+            "stacktrace",
+            "cppCompressedTraces",
+            "name",
+            "email",
+        ]

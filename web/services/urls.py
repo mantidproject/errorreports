@@ -3,11 +3,11 @@ from services import views
 from django.urls import path
 
 router = routers.DefaultRouter(trailing_slash=False)
-router.register(r'error', views.ErrorViewSet)
+router.register(r"error", views.ErrorViewSet)
 urlpatterns = [
-    path('', views.api_root),
-    path('recovery/', views.RecoveryFileUploadView.as_view()),
-    path('recovery', views.RecoveryFileUploadView.as_view()),
+    path("", views.api_root),
+    path("recovery/", views.RecoveryFileUploadView.as_view()),
+    path("recovery", views.RecoveryFileUploadView.as_view()),
 ]
 
 urlpatterns += router.urls

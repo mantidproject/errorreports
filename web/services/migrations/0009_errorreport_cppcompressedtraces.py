@@ -4,15 +4,14 @@ from django.db import migrations, models
 
 
 class Migration(migrations.Migration):
-
     dependencies = [
-        ('services', '0008_add_github_issue_model'),
+        ("services", "0008_add_github_issue_model"),
     ]
 
     operations = [
         migrations.AddField(
-            model_name='errorreport',
-            name='cppCompressedTraces',
-            field=models.CharField(blank=True, default='', max_length=10000),
+            model_name="errorreport",
+            name="cppCompressedTraces",
+            field=models.CharField(blank=True, default="", max_length=10000),
         ),
     ]
