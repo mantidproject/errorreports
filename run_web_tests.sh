@@ -21,7 +21,7 @@ if [[ ! -f "$ENV_FILE" ]]; then
   sed -e 's@DB_USER=<Not Set>@DB_USER=testuser@' |\
   sed -e 's@DB_PASS=<Not Set>@DB_PASS=testuserpasswd@' |\
   sed -e 's@SLACK_WEBHOOK_URL=<Not Set>@SLACK_WEBHOOK_URL=@' |\
-  sed -e 's@DJANGO_CSRF_TRUSTED_ORIGINS=<Not Set>@DJANGO_CSRF_TRUSTED_ORIGINS=http://localhost:8083' > ${ENV_FILE}
+  sed -e 's@DJANGO_CSRF_TRUSTED_ORIGINS=<Not Set>@DJANGO_CSRF_TRUSTED_ORIGINS=http://localhost:8083@' > ${ENV_FILE}
   CLEAN_ENV=true
 else
   echo "Running tests using an existing environment file..."
