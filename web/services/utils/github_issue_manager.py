@@ -78,6 +78,8 @@ def get_or_create_github_issue(report) -> GithubIssue | None:
         logger.info("No GIT_AUTH_TOKEN provided; skipping github issue interaction")
         return None
 
+    logger.error(f"This is the token=[{git_access_token}] and this is the repo=[{issue_repo}]")
+
     auth = Auth.Token(git_access_token)
     g = Github(auth=auth)
     repo = g.get_repo(issue_repo)
