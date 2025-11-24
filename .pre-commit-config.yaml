@@ -27,7 +27,7 @@ repos:
         args: ["--config", ".rstcheck.project.cfg"]
 
   - repo: https://github.com/astral-sh/ruff-pre-commit
-    rev: v0.12.12
+    rev: v0.14.5
     # ruff must appear before black in the list of hooks
     hooks:
       - id: ruff-check
