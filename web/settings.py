@@ -193,3 +193,6 @@ SLACK_ERROR_REPORTS_EMPTY_FIELD_TEXT = os.getenv(
 
 # CSRF trusted origins
 CSRF_TRUSTED_ORIGINS = os.getenv("DJANGO_CSRF_TRUSTED_ORIGINS", "").split(",")
+
+# To direct django admin login into the built-in admin login page
+LOGIN_URL = "/admin/login/"
