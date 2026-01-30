@@ -25,7 +25,7 @@ class WithinDateFilter(django_filters.DateFilter):
         if value:
             # date_value = value.replace(hour=0, minute=0, second=0)
             filter_lookups = {
-                "%s__range" % (self.name,): (
+                "%s__range" % (self.field_name,): (
                     value,
                     value + timedelta(days=1),
                 ),
@@ -39,17 +39,17 @@ class MD5Filter(django_filters.CharFilter):
         if value:
             if len(value) != 32:
                 value = hashlib.md5(value).hexdigest()
-            filter_lookups = {self.name: value}
+            filter_lookups = {self.field_name: value}
             queryset = queryset.filter(**filter_lookups)
         return queryset
 
 
 class ErrorFilter(django_filters.FilterSet):
-    date = WithinDateFilter(name="dateTime")
-    datemin = django_filters.DateFilter(name="dateTime", lookup_expr="gte")
-    datemax = django_filters.DateFilter(name="dateTime", lookup_expr="lt")
-    uid = MD5Filter(name="uid")
-    host = MD5Filter(name="host")
+    date = WithinDateFilter(field_name="dateTime")
+    datemin = django_filters.DateFilter(field_name="dateTime", lookup_expr="gte")
+    datemax = django_filters.DateFilter(field_name="dateTime", lookup_expr="lt")
+    uid = MD5Filter(field_name="uid")
+    host = MD5Filter(field_name="host")
 
     class Meta:
         model = ErrorReport
