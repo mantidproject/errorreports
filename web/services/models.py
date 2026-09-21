@@ -1,32 +1,32 @@
-from django.db import models
-from django.conf import settings
-from django.core.files.storage import FileSystemStorage
-from django.db.models import signals
-from services.tasks import send_notification_to_slack
-from services.constants import (
-    uid_max_length,
-    host_max_length,
-    osName_max_length,
-    osArch_max_length,
-    osVersion_max_length,
-    paraView_max_length,
-    mantidVersion_max_length,
-    mantidSha1_max_length,
-    osReadable_max_length,
-    application_max_length,
-    facility_max_length,
-    exitCode_max_length,
-    upTime_max_length,
-    free_text_max_length,
-    stacktrace_max_length,
-    cppCrompressedTraces_max_length,
-    input_box_max_length,
-    repoName_max_length,
-    issueNumber_max_length,
-)
-from services.utils.decompress_cpp_traces import decompress_cpp_traces
 import threading
 
+from django.conf import settings
+from django.core.files.storage import FileSystemStorage
+from django.db import models
+from django.db.models import signals
+from services.constants import (
+    application_max_length,
+    cppCrompressedTraces_max_length,
+    exitCode_max_length,
+    facility_max_length,
+    free_text_max_length,
+    host_max_length,
+    input_box_max_length,
+    issueNumber_max_length,
+    mantidSha1_max_length,
+    mantidVersion_max_length,
+    osArch_max_length,
+    osName_max_length,
+    osReadable_max_length,
+    osVersion_max_length,
+    paraView_max_length,
+    repoName_max_length,
+    stacktrace_max_length,
+    uid_max_length,
+    upTime_max_length,
+)
+from services.tasks import send_notification_to_slack
+from services.utils.decompress_cpp_traces import decompress_cpp_traces
 
 # Implements saving recovery files to disk
 FILE_SYSTEM_STORE = FileSystemStorage(location=settings.MEDIA_ROOT)
