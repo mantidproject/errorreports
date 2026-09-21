@@ -1,12 +1,12 @@
+import logging
+import os
+import pathlib
+import re
+from string import Template
+
+from github import Auth, Github
 from services.models import ErrorReport, GithubIssue
 from services.utils.decompress_cpp_traces import decompress_cpp_traces
-
-import re
-import pathlib
-import os
-import logging
-from string import Template
-from github import Github, Auth
 
 logger = logging.getLogger()
 line_exp = re.compile(
