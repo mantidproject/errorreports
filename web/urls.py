@@ -1,7 +1,7 @@
 from django.conf.urls import include
 from django.contrib import admin
-from django.views.generic.base import RedirectView
 from django.urls import path
+from django.views.generic.base import RedirectView
 from views import DRFLoginView
 
 admin.autodiscover()
