@@ -168,8 +168,10 @@ def notify_report_received(sender, instance, signal, *args, **kwargs):
         args=(
             name,
             email,
+            instance.facility,
             instance.textBox,
             stacktrace,
+            instance.exitCode,
             instance.application,
             instance.mantidVersion,
             instance.osReadable,
