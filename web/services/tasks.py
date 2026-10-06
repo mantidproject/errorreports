@@ -6,10 +6,12 @@ from string import Template
 logger = logging.getLogger("NotificationLogger")
 SLACK_MESSAGE = Template("""
 Name: $name Email: $email
+Facility: $facility
 Additional text:
 $add_text
 Using: $application $version on $os
 Issue link: $issue_link
+Exit code: $exit_code
 Stack Trace:
 """)
 
@@ -17,8 +19,10 @@ Stack Trace:
 def send_notification_to_slack(
     name,
     email,
+    facility,
     additional_text,
     stacktrace,
+    exit_code,
     application,
     version,
     os,
@@ -30,7 +34,13 @@ def send_notification_to_slack(
     :param name: The name field supplied in the error report
     :param email: The email address supplied in the error report.
                   This is required.
-    :param additional_text: Any additional text provided
+    :param facility: The facility the user selected as default.
+    :param additional_text: Any additional text provided by the user.
+    :param exit_code: The exit code returned by the application.
+    :param application: The application where the error occurred.
+    :param version: The version of the application.
+    :param os: The operating system where the error occurred.
+    :param github_issue_link: The link to the GitHub issue for this error.
     """
     slack_webhook_url = settings.SLACK_WEBHOOK_URL
     if not slack_webhook_url:
@@ -38,11 +48,13 @@ def send_notification_to_slack(
     text = SLACK_MESSAGE.substitute(
         name=_string_or_empty_field(name),
         email=_string_or_empty_field(email),
+        facility=_string_or_empty_field(facility),
         add_text=_string_or_empty_field(additional_text),
         application=_string_or_empty_field(application),
         version=_string_or_empty_field(version),
         os=_string_or_empty_field(os),
         issue_link=github_issue_link,
+        exit_code=_string_or_empty_field(exit_code),
     )
     stacktrace_text = f"```{_string_or_empty_field(stacktrace)}```"
     requests.post(
