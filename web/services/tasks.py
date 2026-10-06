@@ -34,9 +34,9 @@ def send_notification_to_slack(
     :param name: The name field supplied in the error report
     :param email: The email address supplied in the error report.
                   This is required.
-    :param facility: The facility where the error occurred.
+    :param facility: The facility the user selected as default.
     :param additional_text: Any additional text provided by the user.
-    :param exit_code: The exit code provided.
+    :param exit_code: The exit code returned by the application.
     :param application: The application where the error occurred.
     :param version: The version of the application.
     :param os: The operating system where the error occurred.
