@@ -126,7 +126,14 @@ def saveErrorReport(report):
     else:
         user = None
 
-    github_issue = get_or_create_github_issue(report)
+    try:
+        github_issue = get_or_create_github_issue(report)
+    except Exception:
+        logger.exception(
+            "Failed to create or update a GitHub issue for an error report. "
+            "The report has been saved without an issue link."
+        )
+        github_issue = None
 
     obj, created = ErrorReport.objects.get_or_create(
         osReadable=osReadable,
