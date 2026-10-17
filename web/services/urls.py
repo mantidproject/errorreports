@@ -1,6 +1,6 @@
+from django.urls import path
 from rest_framework import routers
 from services import views
-from django.urls import path
 
 router = routers.DefaultRouter(trailing_slash=False)
 router.register(r"error", views.ErrorViewSet)

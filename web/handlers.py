@@ -1,6 +1,7 @@
 import logging
-from services.tasks import send_logging_output_to_slack
 import threading
+
+from services.tasks import send_logging_output_to_slack
 
 logger = logging.getLogger(__name__)
 

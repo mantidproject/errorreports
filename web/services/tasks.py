@@ -1,7 +1,8 @@
-from django.conf import settings
-import requests
 import logging
 from string import Template
+
+import requests
+from django.conf import settings
 
 logger = logging.getLogger("NotificationLogger")
 SLACK_MESSAGE = Template("""
