@@ -16,7 +16,7 @@ jobs:
           python-version: 3.x
           architecture: x64
       - name: Checkout head
-        uses: actions/checkout@v5
+        uses: actions/checkout@v6
       - name: Run webtests
         run: bash ./run_web_tests.sh
         env:
