@@ -1,8 +1,9 @@
-from services.utils.github_issue_manager import (
-    _trim_stacktrace,
-    _stacktrace_line_trimer,
-)
 import unittest
+
+from services.utils.github_issue_manager import (
+    _stacktrace_line_trimer,
+    _trim_stacktrace,
+)
 
 
 class TrimStacktraceTest(unittest.TestCase):
